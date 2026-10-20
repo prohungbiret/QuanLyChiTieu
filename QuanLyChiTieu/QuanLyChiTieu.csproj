@@ -82,6 +82,7 @@
     <Compile Include="Services\AuthService.cs" />
     <Compile Include="UI\Theme.cs" />
     <Compile Include="UI\UIHelper.cs" />
+    <Compile Include="UI\UcProgress.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -109,6 +110,8 @@
     <None Include="Database\002_CreateTables.sql" />
     <None Include="Database\003_CreateConstraints.sql" />
     <None Include="Database\004_SeedData.sql" />
+    <None Include="Database\005_Views.sql" />
+    <None Include="Database\recreate-database.ps1" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />

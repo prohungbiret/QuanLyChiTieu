@@ -28,14 +28,14 @@ DELETE FROM NguoiDung;
 GO
 
 /* Reset identity để ID dự đoán được khi chạy lại */
-DBCC CHECKIDENT ('LichSuTraNo',     RESEED, 0);
-DBCC CHECKIDENT ('GiaoDich',        RESEED, 0);
-DBCC CHECKIDENT ('NganSach',        RESEED, 0);
-DBCC CHECKIDENT ('MucTieuTietKiem', RESEED, 0);
-DBCC CHECKIDENT ('KhoanVayNo',      RESEED, 0);
-DBCC CHECKIDENT ('ViTien',          RESEED, 0);
-DBCC CHECKIDENT ('DanhMuc',         RESEED, 0);
-DBCC CHECKIDENT ('NguoiDung',       RESEED, 0);
+DBCC CHECKIDENT ('LichSuTraNo',     RESEED, 1);
+DBCC CHECKIDENT ('GiaoDich',        RESEED, 1);
+DBCC CHECKIDENT ('NganSach',        RESEED, 1);
+DBCC CHECKIDENT ('MucTieuTietKiem', RESEED, 1);
+DBCC CHECKIDENT ('KhoanVayNo',      RESEED, 1);
+DBCC CHECKIDENT ('ViTien',          RESEED, 1);
+DBCC CHECKIDENT ('DanhMuc',         RESEED, 1);
+DBCC CHECKIDENT ('NguoiDung',       RESEED, 1);
 GO
 
 /* ---------- 1. Tài khoản (một batch duy nhất để dùng biến) ---------- */
