@@ -102,15 +102,90 @@
             this.navPanel.Controls.Add(this.btnNavVayNo);
             this.navPanel.Controls.Add(this.btnNavThongKe);
             this.navPanel.Controls.Add(this.btnNavTaiKhoan);
-            ConfigNavButton(this.btnNavTrangChu, "▶  Trang chủ");
-            ConfigNavButton(this.btnNavGiaoDich, "⇅  Giao dịch");
-            ConfigNavButton(this.btnNavViTien, "▭  Ví tiền");
-            ConfigNavButton(this.btnNavDanhMuc, "☰  Danh mục");
-            ConfigNavButton(this.btnNavNganSach, "◔  Ngân sách");
-            ConfigNavButton(this.btnNavTietKiem, "◉  Tiết kiệm");
-            ConfigNavButton(this.btnNavVayNo, "⇄  Vay nợ");
-            ConfigNavButton(this.btnNavThongKe, "▤  Thống kê");
-            ConfigNavButton(this.btnNavTaiKhoan, "⚙  Tài khoản");
+            //
+            // 9 nút nav — gán thuộc tính trực tiếp (designer-safe, không gọi hàm custom)
+            //
+            this.btnNavTrangChu.FlatAppearance.BorderSize = 0;
+            this.btnNavTrangChu.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnNavTrangChu.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            this.btnNavTrangChu.ForeColor = System.Drawing.Color.FromArgb(201, 211, 224);
+            this.btnNavTrangChu.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.btnNavTrangChu.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
+            this.btnNavTrangChu.Size = new System.Drawing.Size(220, 44);
+            this.btnNavTrangChu.Text = "▶  Trang chủ";
+            this.btnNavTrangChu.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnNavGiaoDich.FlatAppearance.BorderSize = 0;
+            this.btnNavGiaoDich.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnNavGiaoDich.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            this.btnNavGiaoDich.ForeColor = System.Drawing.Color.FromArgb(201, 211, 224);
+            this.btnNavGiaoDich.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.btnNavGiaoDich.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
+            this.btnNavGiaoDich.Size = new System.Drawing.Size(220, 44);
+            this.btnNavGiaoDich.Text = "⇅  Giao dịch";
+            this.btnNavGiaoDich.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnNavViTien.FlatAppearance.BorderSize = 0;
+            this.btnNavViTien.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnNavViTien.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            this.btnNavViTien.ForeColor = System.Drawing.Color.FromArgb(201, 211, 224);
+            this.btnNavViTien.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.btnNavViTien.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
+            this.btnNavViTien.Size = new System.Drawing.Size(220, 44);
+            this.btnNavViTien.Text = "▭  Ví tiền";
+            this.btnNavViTien.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnNavDanhMuc.FlatAppearance.BorderSize = 0;
+            this.btnNavDanhMuc.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnNavDanhMuc.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            this.btnNavDanhMuc.ForeColor = System.Drawing.Color.FromArgb(201, 211, 224);
+            this.btnNavDanhMuc.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.btnNavDanhMuc.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
+            this.btnNavDanhMuc.Size = new System.Drawing.Size(220, 44);
+            this.btnNavDanhMuc.Text = "☰  Danh mục";
+            this.btnNavDanhMuc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnNavNganSach.FlatAppearance.BorderSize = 0;
+            this.btnNavNganSach.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnNavNganSach.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            this.btnNavNganSach.ForeColor = System.Drawing.Color.FromArgb(201, 211, 224);
+            this.btnNavNganSach.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.btnNavNganSach.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
+            this.btnNavNganSach.Size = new System.Drawing.Size(220, 44);
+            this.btnNavNganSach.Text = "◔  Ngân sách";
+            this.btnNavNganSach.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnNavTietKiem.FlatAppearance.BorderSize = 0;
+            this.btnNavTietKiem.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnNavTietKiem.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            this.btnNavTietKiem.ForeColor = System.Drawing.Color.FromArgb(201, 211, 224);
+            this.btnNavTietKiem.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.btnNavTietKiem.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
+            this.btnNavTietKiem.Size = new System.Drawing.Size(220, 44);
+            this.btnNavTietKiem.Text = "◉  Tiết kiệm";
+            this.btnNavTietKiem.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnNavVayNo.FlatAppearance.BorderSize = 0;
+            this.btnNavVayNo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnNavVayNo.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            this.btnNavVayNo.ForeColor = System.Drawing.Color.FromArgb(201, 211, 224);
+            this.btnNavVayNo.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.btnNavVayNo.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
+            this.btnNavVayNo.Size = new System.Drawing.Size(220, 44);
+            this.btnNavVayNo.Text = "⇄  Vay nợ";
+            this.btnNavVayNo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnNavThongKe.FlatAppearance.BorderSize = 0;
+            this.btnNavThongKe.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnNavThongKe.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            this.btnNavThongKe.ForeColor = System.Drawing.Color.FromArgb(201, 211, 224);
+            this.btnNavThongKe.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.btnNavThongKe.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
+            this.btnNavThongKe.Size = new System.Drawing.Size(220, 44);
+            this.btnNavThongKe.Text = "▤  Thống kê";
+            this.btnNavThongKe.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnNavTaiKhoan.FlatAppearance.BorderSize = 0;
+            this.btnNavTaiKhoan.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnNavTaiKhoan.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            this.btnNavTaiKhoan.ForeColor = System.Drawing.Color.FromArgb(201, 211, 224);
+            this.btnNavTaiKhoan.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.btnNavTaiKhoan.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
+            this.btnNavTaiKhoan.Size = new System.Drawing.Size(220, 44);
+            this.btnNavTaiKhoan.Text = "⚙  Tài khoản";
+            this.btnNavTaiKhoan.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNavTrangChu.Click += new System.EventHandler(this.btnNavTrangChu_Click);
             this.btnNavGiaoDich.Click += new System.EventHandler(this.btnNavGiaoDich_Click);
             this.btnNavViTien.Click += new System.EventHandler(this.btnNavViTien_Click);
@@ -227,25 +302,6 @@
         }
 
         #endregion
-
-        // Cấu hình chung cho 9 nút nav (giống mockup: item cao 44px, nền trong suốt,
-        // chữ #C9D3E0, căn trái, padding 12px). Lưu ý: nếu mở/sửa form bằng VS Designer,
-        // các lệnh gọi tùy chỉnh trong InitializeComponent có thể bị loại bỏ khi
-        // Designer serialize lại — khi đó nhấn Run vẫn đảm bảo gọi lại từ InitializeComponent.
-        private static readonly System.Drawing.Color ColorSub = System.Drawing.Color.FromArgb(201, 211, 224);
-
-        private static void ConfigNavButton(System.Windows.Forms.Button b, string duLieu)
-        {
-            b.FlatAppearance.BorderSize = 0;
-            b.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            b.Font = new System.Drawing.Font("Segoe UI", 9.5f);
-            b.ForeColor = ColorSub;
-            b.Size = new System.Drawing.Size(220, 44);
-            b.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            b.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            b.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
-            b.Text = duLieu;
-        }
 
         private System.Windows.Forms.Panel sidebar;
         private System.Windows.Forms.Panel brandPanel;
