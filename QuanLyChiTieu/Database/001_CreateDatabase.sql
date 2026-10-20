@@ -1,0 +1,5 @@
+﻿IF DB_ID('QuanLyChiTieuDB') IS NULL
+    CREATE DATABASE QuanLyChiTieuDB;
+GO
+USE QuanLyChiTieuDB;
+GO
