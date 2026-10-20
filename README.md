@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # QuanLyChiTieu — Phần mềm quản lý chi tiêu cá nhân
 
 C# WinForms · .NET Framework 4.8 · ADO.NET (System.Data.SqlClient) · SQL Server LocalDB
@@ -50,3 +51,4 @@ chờ TV2/TV3/TV4 theo phân công `docs/06_Task_Assignment.md`.
 - "Quên mật khẩu" nằm ngoài phạm vi (hiển thị hướng dẫn liên hệ quản trị).
 - FrmRegister / FrmChangePassword thuộc TV2/TV3 — đang là placeholder.
 - Biểu đồ của dashboard là phần của phân hệ Thống kê (TV3).
+
