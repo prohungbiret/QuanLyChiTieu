@@ -218,7 +218,6 @@
             this.Name = "FrmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Quản lý chi tiêu cá nhân";
-            this.Load += new System.EventHandler(this.FrmMain_Load);
             this.sidebar.ResumeLayout(false);
             this.brandPanel.ResumeLayout(false);
             this.navPanel.ResumeLayout(false);

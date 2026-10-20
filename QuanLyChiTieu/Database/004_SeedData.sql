@@ -212,11 +212,15 @@ SELECT @nhanNhomID,
        CASE WHEN t.so % 7 = 0 THEN 400000 ELSE (t.so % 5 + 1) * 100000 + 50000 END,
        DATEADD(DAY, -(t.so + 31), CAST(GETDATE() AS DATE)),
        DM.DanhMucID,
-       CASE WHEN t.so % 3 = 0 THEN @viTienMat WHEN t.so % 3 = 1 THEN @viVCB ELSE @viMomo END,
-       NULL,
+       CASE WHEN t.so % 7 = 0 THEN NULL
+            ELSE CASE WHEN t.so % 3 = 0 THEN @viTienMat WHEN t.so % 3 = 1 THEN @viVCB ELSE @viMomo END END,
+       CASE WHEN t.so % 7 = 0 THEN
+            CASE WHEN t.so % 3 = 0 THEN @viTienMat WHEN t.so % 3 = 1 THEN @viVCB ELSE @viMomo END
+            ELSE NULL END,
        CASE WHEN t.so % 7 = 0 THEN N'Thu lẻ tháng trước' ELSE N'Chi tiêu hàng ngày (demo)' END
 FROM #i t
-JOIN DanhMuc DM ON DM.NguoiDungID = @nhanNhomID AND DM.TenDanhMuc = t.loaiChon;
+JOIN DanhMuc DM ON DM.NguoiDungID = @nhanNhomID
+   AND DM.TenDanhMuc = CASE WHEN t.so % 7 = 0 THEN N'Thu khác' ELSE t.loaiChon END;
 
 /* ---------- 8. Dữ liệu riêng người 3 (tách biệt với người 1) ---------- */
 INSERT INTO GiaoDich (NguoiDungID, LoaiGiaoDich, SoTien, NgayGiaoDich, DanhMucID, ViDichID, GhiChu)
