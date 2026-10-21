@@ -45,3 +45,8 @@ kể cả GD của phân hệ khác; không phá phân hệ khác; đã commit; 
 | `ValidationHelper` | `Services/ValidationHelper.cs` | Tất cả: kiểm số tiền, ngày (cấm tương lai), quan hệ GD-ví, GD-danh mục, TraNo gốc+lãi |
 | `recreate-database.ps1` | `Database/` | Cả nhóm: dựng lại DB demo 1 lệnh (drop → 001→005) |
 | `build.ps1` | gốc repo | Cả nhóm: build trước khi commit |
+
+## Tài khoản demo: 
+truongnhom/chitieu123
+demo/chitieu123
+thanhvien2/sinhvien123
