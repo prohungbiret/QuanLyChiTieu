@@ -54,12 +54,30 @@
     <Compile Include="Controls\UcDangXayDung.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Controls\UcDanhMuc.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\UcNganSach.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\UcThongKe.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="CurrentUser.cs" />
     <Compile Include="Data\Database.cs" />
     <Compile Include="Forms\FrmDialogNhap.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FrmMauNhap.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmThemDanhMuc.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmThemNganSach.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmChangePassword.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FrmLogin.cs">
@@ -84,6 +102,9 @@
     <Compile Include="Models\NguoiDung.cs" />
     <Compile Include="Models\ViTien.cs" />
     <Compile Include="Services\AuthService.cs" />
+    <Compile Include="Services\DanhMucService.cs" />
+    <Compile Include="Services\NganSachService.cs" />
+    <Compile Include="Services\ThongKeService.cs" />
     <Compile Include="Services\ValidationHelper.cs" />
     <Compile Include="UI\Theme.cs" />
     <Compile Include="UI\UIHelper.cs" />
