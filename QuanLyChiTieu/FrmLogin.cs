@@ -63,9 +63,10 @@ namespace QuanLyChiTieu
 
         private void lnkDangKy_Click(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            // FrmRegister thuộc TV2 (QD15) — gọi API AuthService sau khi tích hợp.
-            MessageBox.Show("Màn hình Đăng ký do TV2 phát triển (FrmRegister).",
-                "Đang phát triển", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            using (Forms.FrmRegister frm = new Forms.FrmRegister())
+            {
+                frm.ShowDialog();
+            }
         }
 
         private void lnkQuenMatKhau_Click(object sender, LinkLabelLinkClickedEventArgs e)
