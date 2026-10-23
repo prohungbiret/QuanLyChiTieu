@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Windows.Forms;
 using QuanLyChiTieu.Controls;
@@ -89,7 +89,8 @@ namespace QuanLyChiTieu
 
         private void btnNavViTien_Click(object sender, EventArgs e)
         {
-            OpenDangXayDung(btnNavViTien, "Ví tiền", "TV2");
+            MucDangChon(btnNavViTien);
+            ShowControl(new Controls.UcViTien());
         }
 
         private void btnNavDanhMuc_Click(object sender, EventArgs e)

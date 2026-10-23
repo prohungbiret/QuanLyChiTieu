@@ -51,6 +51,12 @@
     <Compile Include="Controls\UcDashboard.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Controls\UcViTien.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\UcViTien.Designer.cs">
+      <DependentUpon>UcViTien.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\UcDangXayDung.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -102,6 +108,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Controls\UcViTien.resx">
+      <DependentUpon>UcViTien.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmRegister.resx">
       <DependentUpon>FrmRegister.cs</DependentUpon>
     </EmbeddedResource>
