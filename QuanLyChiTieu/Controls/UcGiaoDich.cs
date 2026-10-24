@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Drawing;
 using System.Windows.Forms;
 using QuanLyChiTieu.Classes;
+using QuanLyChiTieu.Models;
 
 namespace QuanLyChiTieu.Controls
 {
@@ -258,6 +259,34 @@ namespace QuanLyChiTieu.Controls
                 viNguon = cboViNguon.SelectedValue;
                 viDich = cboViDich.SelectedValue;
             }
+
+            if (loaiGD == "Chi" || loaiGD == "ChuyenTien")
+            {
+                string sqlVi = "select SoDuHienTai from vwSoDuVi where ViTienID = @ViTienID and NguoiDungID = @NguoiDungID";
+                SqlParameter[] p = new SqlParameter[]
+                {
+                    
+                    new SqlParameter("@ViTienID", viNguon),
+                    new SqlParameter("@NguoiDungID", CurrentUser.NguoiDungID)
+                };
+                DataTable dt = dtBase.DataReader(sqlVi, p);
+                if (dt.Rows.Count > 0)
+                {
+                    decimal SoDuHienTai = Convert.ToDecimal(dt.Rows[0]["SoDuHienTai"]);
+                    if (soTien > SoDuHienTai)
+                    {
+                        string canhbao = "Cảnh báo: Ví '" + cboViNguon.Text + "' hiện chỉ còn " + SoDuHienTai.ToString("N0") + " đ.\n"
+                            + "Khoản tiền này (" + soTien.ToString("N0") + " đ) sẽ khiến ví bị âm " + (soTien - SoDuHienTai).ToString("N0") + " đ!\n"
+                            + "Bạn có chắc chắn muốn tiếp tục ghi nhận không?";
+
+                        if (MessageBox.Show(canhbao, "Cảnh báo thấu chi ví", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                        {
+                            return;
+                        }
+                    }
+                }
+            }
+
 
             try
             {
