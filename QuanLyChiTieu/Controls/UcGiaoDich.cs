@@ -45,7 +45,15 @@ namespace QuanLyChiTieu.Controls
 
             FillComboViTien();
             HienThiDanhSach();
-           
+
+            txtTimKiem.KeyDown += (s, ev) =>
+            {
+                if (ev.KeyCode == Keys.Enter)
+                {
+                    ev.SuppressKeyPress = true;
+                    btnLoc.PerformClick();
+                }
+            };
         }
         private void FillComboViTien()
         {
@@ -114,7 +122,7 @@ namespace QuanLyChiTieu.Controls
             string sqlHTDS = "select gd.GiaoDichID,gd.NgayGiaoDich,gd.LoaiGiaoDich,gd.SoTien,dm.TenDanhMuc,vn.TenVi as ViNguon,vd.TenVi as ViDich,gd.GhiChu " +
                 "from GiaoDich gd left join DanhMuc dm on gd.DanhMucID = dm.DanhMucID " +
                 "left join ViTien vn on gd.ViNguonID = vn.ViTienID " +
-                "left join ViTien vd on gd.ViDichID = vd.ViTienID where gd.NguoiDungID = @NguoiDungID " + dieuKienThem + "" +
+                "left join ViTien vd on gd.ViDichID = vd.ViTienID where gd.NguoiDungID = @NguoiDungID and gd.LoaiGiaoDich in ('Thu', 'Chi', 'ChuyenTien') " + dieuKienThem + "" +
                 "order by gd.NgayGiaoDich desc, gd.GiaoDichID desc";
 
             List<SqlParameter> p = new List<SqlParameter>();
@@ -283,6 +291,12 @@ namespace QuanLyChiTieu.Controls
 
         private void btnSua_Click(object sender, EventArgs e)
         {
+            if (cboLoaiGiaoDich.SelectedIndex == -1)
+            {
+                MessageBox.Show("Vui lòng chọn loại giao dịch!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
 
             string soTienChuoi = txtSoTien.Text.Replace(".", "").Trim();
             decimal soTien = 0;
@@ -465,24 +479,26 @@ namespace QuanLyChiTieu.Controls
                 p.Add(new SqlParameter("@ViLocID", cboLocVi.SelectedValue));
             }
 
+            if (!string.IsNullOrWhiteSpace(txtTimKiem.Text))
+            {
+                dieuKien += "and (gd.GhiChu like @TuKhoa or dm.TenDanhMuc like @TuKhoa) ";
+                p.Add(new SqlParameter("@TuKhoa", "%" + txtTimKiem.Text.Trim() + "%"));
+            }
+
             HienThiDanhSach(dieuKien, p);
-
-
         }
 
         // 8. Nút Đặt lại bộ lọc
         private void btnDatLai_Click(object sender, EventArgs e)
         {
-
-         
             dtpDenNgay.Value = DateTime.Today;
             dtpTuNgay.Value = DateTime.Today.AddDays(-30);
         
             cboLocLoai.SelectedIndex = 0; 
             cboLocVi.SelectedIndex = -1;
+            txtTimKiem.Text = "";
        
             HienThiDanhSach();
-
         }
 
     
@@ -491,8 +507,9 @@ namespace QuanLyChiTieu.Controls
         private void dgvGiaoDich_CellClick(object sender, DataGridViewCellEventArgs e)
         {
 
-            maGiaoDichDangChon = dgvGiaoDich.CurrentRow.Cells["GiaoDichID"].Value?.ToString();
             if (e.RowIndex < 0 || dgvGiaoDich.CurrentRow == null) return;
+
+            maGiaoDichDangChon = dgvGiaoDich.CurrentRow.Cells["GiaoDichID"].Value?.ToString();
 
             if (dgvGiaoDich.CurrentRow.Cells["LoaiGiaoDich"].Value?.ToString() == "Chi")
             {
