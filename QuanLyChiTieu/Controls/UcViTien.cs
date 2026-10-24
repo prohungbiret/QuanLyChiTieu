@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using System.Data.SqlClient;
 using System.Windows.Forms;
 
 namespace QuanLyChiTieu.Controls
@@ -32,14 +33,22 @@ namespace QuanLyChiTieu.Controls
        
         private void HienThiDanhSachVi()
         {
-            string sql = "select ViTienID, TenVi, LoaiVi, SoDuBanDau, SoDuHienTai from vwSoDuVi where NguoiDungID = " + CurrentUser.NguoiDungID + " and TrangThai = 1";
-            dgvViTien.DataSource = dtBase.DataReader(sql);
+            string sql = "select ViTienID, TenVi, LoaiVi, SoDuBanDau, SoDuHienTai from vwSoDuVi where NguoiDungID = @NguoiDungID and TrangThai = 1";
+            dgvViTien.DataSource = dtBase.DataReader(sql, new SqlParameter[] { new SqlParameter("@NguoiDungID", CurrentUser.NguoiDungID) });
 
             if (dgvViTien.Columns["ViTienID"] != null) dgvViTien.Columns["ViTienID"].Visible = false;
             if (dgvViTien.Columns["TenVi"] != null) dgvViTien.Columns["TenVi"].HeaderText = "Tên ví";
             if (dgvViTien.Columns["LoaiVi"] != null) dgvViTien.Columns["LoaiVi"].HeaderText = "Loại ví";
-            if (dgvViTien.Columns["SoDuBanDau"] != null) dgvViTien.Columns["SoDuBanDau"].HeaderText = "Số dư ban đầu";
-            if (dgvViTien.Columns["SoDuHienTai"] != null) dgvViTien.Columns["SoDuHienTai"].HeaderText = "Số dư hiện tại";
+            if (dgvViTien.Columns["SoDuBanDau"] != null)
+            {
+                dgvViTien.Columns["SoDuBanDau"].HeaderText = "Số dư ban đầu";
+                dgvViTien.Columns["SoDuBanDau"].DefaultCellStyle.Format = "#,##0";
+            }
+            if (dgvViTien.Columns["SoDuHienTai"] != null)
+            {
+                dgvViTien.Columns["SoDuHienTai"].HeaderText = "Số dư hiện tại";
+                dgvViTien.Columns["SoDuHienTai"].DefaultCellStyle.Format = "#,##0";
+            }
         }
 
        
@@ -58,7 +67,12 @@ namespace QuanLyChiTieu.Controls
                     cboLoaiVi.Text = "Tiền mặt";
 
                 txtSoDuBanDau.Text = dgvViTien.CurrentRow.Cells["SoDuBanDau"].Value?.ToString();
-                txtSoDuHienTai.Text = dgvViTien.CurrentRow.Cells["SoDuHienTai"].Value?.ToString();
+                decimal soDuHT = 0;
+                if (decimal.TryParse(dgvViTien.CurrentRow.Cells["SoDuHienTai"].Value?.ToString(), out soDuHT))
+                {
+                    txtSoDuHienTai.Text = soDuHT.ToString("#,##0").Replace(",", ".");
+                }
+
 
                 btnSua.Enabled = true;
                 btnXoa.Enabled = true;
@@ -100,8 +114,12 @@ namespace QuanLyChiTieu.Controls
             
 
             
-            string sqlCheck = "select TenVi from ViTien where NguoiDungID = " + CurrentUser.NguoiDungID + " and TenVi = N'" + txtTenVi.Text.Trim() + "' and TrangThai = 1";
-            DataTable dtTen = dtBase.DataReader(sqlCheck);
+            string sqlCheck = "select TenVi from ViTien where NguoiDungID = @NguoiDungID and TenVi = @TenVi and TrangThai = 1";
+            DataTable dtTen = dtBase.DataReader(sqlCheck, new SqlParameter[]
+            {
+                new SqlParameter("@NguoiDungID", CurrentUser.NguoiDungID),
+                new SqlParameter("@TenVi", txtTenVi.Text.Trim())
+            });
             if (dtTen.Rows.Count > 0)
             {
                 MessageBox.Show("Tên ví này đã tồn tại trong danh sách của bạn!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -111,13 +129,16 @@ namespace QuanLyChiTieu.Controls
 
             try
             {
-                string sqlInsert = "insert into ViTien (NguoiDungID, TenVi, LoaiVi, SoDuBanDau) " +
-                                   "values (" + CurrentUser.NguoiDungID + ", " +
-                                   "N'" + txtTenVi.Text.Trim() + "', " +
-                                   "N'" + cboLoaiVi.Text + "', " +
-                                   soDu + ")";
+                string sqlInsert = "insert into ViTien (NguoiDungID, TenVi, LoaiVi, SoDuBanDau) values (@NguoiDungID, @TenVi, @LoaiVi, @SoDuBanDau)";
+                SqlParameter[] p = new SqlParameter[]
+                {
+                    new SqlParameter("@NguoiDungID", CurrentUser.NguoiDungID),
+                    new SqlParameter("@TenVi", txtTenVi.Text.Trim()),
+                    new SqlParameter("@LoaiVi", cboLoaiVi.Text),
+                    new SqlParameter("@SoDuBanDau", soDu)
+                };
 
-                dtBase.ChangeData(sqlInsert);
+                dtBase.ChangeData(sqlInsert, p);
                 MessageBox.Show("Thêm ví tiền thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 HienThiDanhSachVi();
@@ -159,12 +180,17 @@ namespace QuanLyChiTieu.Controls
             {
                 try
                 {
-                    string sqlUpdate = "update ViTien set TenVi = N'" + txtTenVi.Text.Trim() + "', " +
-                                       "LoaiVi = N'" + cboLoaiVi.Text + "', " +
-                                       "SoDuBanDau = " + soDu + " " +
-                                       "where ViTienID = " + maVi + " and NguoiDungID = " + CurrentUser.NguoiDungID;
+                    string sqlUpdate = "update ViTien set TenVi = @TenVi, LoaiVi = @LoaiVi, SoDuBanDau = @SoDuBanDau where ViTienID = @ViTienID and NguoiDungID = @NguoiDungID";
+                    SqlParameter[] p = new SqlParameter[]
+                    {
+                        new SqlParameter("@TenVi", txtTenVi.Text.Trim()),
+                        new SqlParameter("@LoaiVi", cboLoaiVi.Text),
+                        new SqlParameter("@SoDuBanDau", soDu),
+                        new SqlParameter("@ViTienID", maVi),
+                        new SqlParameter("@NguoiDungID", CurrentUser.NguoiDungID)
+                    };
 
-                    dtBase.ChangeData(sqlUpdate);
+                    dtBase.ChangeData(sqlUpdate, p);
                     MessageBox.Show("Cập nhật thông tin ví thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     HienThiDanhSachVi();
@@ -193,9 +219,13 @@ namespace QuanLyChiTieu.Controls
             {
                 try
                 {
-                    
-                    string sqlDelete = "update ViTien set TrangThai = 0 where ViTienID = " + maVi + " and NguoiDungID = " + CurrentUser.NguoiDungID;
-                    dtBase.ChangeData(sqlDelete);
+                    string sqlDelete = "update ViTien set TrangThai = 0 where ViTienID = @ViTienID and NguoiDungID = @NguoiDungID";
+                    SqlParameter[] p = new SqlParameter[]
+                    {
+                        new SqlParameter("@ViTienID", maVi),
+                        new SqlParameter("@NguoiDungID", CurrentUser.NguoiDungID)
+                    };
+                    dtBase.ChangeData(sqlDelete, p);
 
                     MessageBox.Show("Đã ngừng sử dụng ví thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -238,7 +268,7 @@ namespace QuanLyChiTieu.Controls
             if (decimal.TryParse(giaTri, out soTien))
             {
                 txtSoDuBanDau.TextChanged -= txtSoDuBanDau_TextChanged;
-                txtSoDuBanDau.Text = soTien.ToString("#,##0").Replace(",",".");
+                txtSoDuBanDau.Text = soTien.ToString("#,##0").Replace(",", ".");
                 txtSoDuBanDau.SelectionStart = txtSoDuBanDau.Text.Length;
                 txtSoDuBanDau.TextChanged += txtSoDuBanDau_TextChanged;
             }

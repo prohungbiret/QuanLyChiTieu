@@ -84,7 +84,8 @@ namespace QuanLyChiTieu
 
         private void btnNavGiaoDich_Click(object sender, EventArgs e)
         {
-            OpenDangXayDung(btnNavGiaoDich, "Giao dịch (9 loại)", "TV2");
+            MucDangChon(btnNavGiaoDich);
+            ShowControl(new Controls.UcGiaoDich());
         }
 
         private void btnNavViTien_Click(object sender, EventArgs e)

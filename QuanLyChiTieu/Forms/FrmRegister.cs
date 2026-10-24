@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
+using System.Data.SqlClient;
+
 namespace QuanLyChiTieu.Forms
 {
     public partial class FrmRegister : Form
@@ -68,8 +70,8 @@ namespace QuanLyChiTieu.Forms
                 txtXacNhanMatKhau.Focus();
                 return;
             }
-            string sqlTDN = "select TenDangNhap from NguoiDung where TenDangNhap = N'" + tendn + "'";
-            DataTable dt1 = dtBase.DataReader(sqlTDN);
+            string sqlTDN = "select TenDangNhap from NguoiDung where TenDangNhap = @TenDangNhap";
+            DataTable dt1 = dtBase.DataReader(sqlTDN, new SqlParameter[] { new SqlParameter("@TenDangNhap", tendn) });
             if(dt1.Rows.Count > 0 )
             {
                 MessageBox.Show("Tên đăng nhập đã tồn tại!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -83,8 +85,8 @@ namespace QuanLyChiTieu.Forms
                 txtEmail.SelectAll();
                 return;
             }
-            string sqlEmail = "select Email from NguoiDung where Email = N'" + email + "'";
-            DataTable dt2 = dtBase.DataReader(sqlEmail);
+            string sqlEmail = "select Email from NguoiDung where Email = @Email";
+            DataTable dt2 = dtBase.DataReader(sqlEmail, new SqlParameter[] { new SqlParameter("@Email", email) });
             if(dt2.Rows.Count > 0 )
             {
                 MessageBox.Show("Email này đã đăng ký tài khoản khác!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -93,10 +95,15 @@ namespace QuanLyChiTieu.Forms
             }
             try
             {
-                string sqlInsert = "insert into NguoiDung(TenDangNhap,MatKhauHash,TenHienThi,Email) " +
-                    "values (N'" + tendn + "',N'" + Services.AuthService.HashPassword(mk)+ "'," +
-                    "N'" + tenht + "',N'" + email + "')";
-                dtBase.ChangeData(sqlInsert);
+                string sqlInsert = "insert into NguoiDung(TenDangNhap,MatKhauHash,TenHienThi,Email) values (@TenDangNhap, @MatKhauHash, @TenHienThi, @Email)";
+                SqlParameter[] p = new SqlParameter[]
+                {
+                    new SqlParameter("@TenDangNhap", tendn),
+                    new SqlParameter("@MatKhauHash", Services.AuthService.HashPassword(mk)),
+                    new SqlParameter("@TenHienThi", tenht),
+                    new SqlParameter("@Email", email)
+                };
+                dtBase.ChangeData(sqlInsert, p);
                 MessageBox.Show("Đăng ký tài khoản thành công! Vui lòng đăng nhập.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.Close();
             }
