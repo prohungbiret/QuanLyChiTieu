@@ -99,6 +99,9 @@
     <Compile Include="Controls\UcTietKiem.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Controls\UcVayNo.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="CurrentUser.cs" />
     <Compile Include="Data\Database.cs" />
     <Compile Include="Forms\FrmDialogNhap.cs">
@@ -112,6 +115,12 @@
     </Compile>
     <Compile Include="Forms\FrmRegister.Designer.cs">
       <DependentUpon>FrmRegister.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmThemKhoanVay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmTraNo.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FrmThemDanhMuc.cs">
       <SubType>Form</SubType>
@@ -155,6 +164,7 @@
     <Compile Include="Services\ThongKeService.cs" />
     <Compile Include="Services\TietKiemService.cs" />
     <Compile Include="Services\ValidationHelper.cs" />
+    <Compile Include="Services\VayNoService.cs" />
     <Compile Include="UI\Theme.cs" />
     <Compile Include="UI\UIHelper.cs" />
     <Compile Include="UI\UcChart.cs">
