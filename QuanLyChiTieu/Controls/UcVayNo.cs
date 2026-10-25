@@ -125,7 +125,7 @@ namespace QuanLyChiTieu.Controls
         {
             var the = new Panel();
             the.BackColor = Theme.White;
-            the.Height = 152;
+            the.Height = 148;
             the.Width = Math.Max(340, pnlDanhSach.ClientSize.Width - 28);
             the.Margin = new Padding(0, 0, 0, Theme.GapVua);
             the.Padding = new Padding(14, 10, 14, 8);
@@ -156,16 +156,11 @@ namespace QuanLyChiTieu.Controls
             lblChiTiet.AutoSize = true;
             lblChiTiet.Location = new Point(14, 36);
 
-            var tienDo = new UcProgress();
-            tienDo.Location = new Point(14, 58);
-            tienDo.Width = Math.Max(200, the.Width - 220);
-            tienDo.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
-            tienDo.CapNhat(ct.DaTra, ct.Khoan.SoTienGoc);
-
+            // Hàng nút ở đáy thẻ, căn phải (add TRƯỚC progress để không bị z-order che)
             var pnlNut = new FlowLayoutPanel();
             pnlNut.FlowDirection = FlowDirection.RightToLeft;
-            pnlNut.Location = new Point(14, 96);
-            pnlNut.Size = new Size(the.Width - 28, 40);
+            pnlNut.Location = new Point(14, 94);
+            pnlNut.Size = new Size(the.Width - 28, 34);
             pnlNut.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
             pnlNut.BackColor = Theme.White;
 
@@ -183,9 +178,19 @@ namespace QuanLyChiTieu.Controls
             pnlNut.Controls.Add(btnLichSu);
             pnlNut.Controls.Add(btnGD);
 
+            // Thanh tiến độ: chỉ bar + tình trạng — đúng ngữ nghĩa từng loại khoản:
+            // khoản nợ → "Đã trả", đạt đủ → "Trả đủ"; cho vay → "Đã thu hồi", đủ → "Thu hồi đủ".
+            var tienDo = new UcProgress { HienMoTa = false };
+            tienDo.Location = new Point(14, 56);
+            tienDo.Width = Math.Max(200, the.Width - 28);
+            tienDo.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+            tienDo.CapNhatTienDo(ct.DaTra, ct.Khoan.SoTienGoc,
+                laVayCuaToi ? "Đã trả" : "Đã thu hồi",
+                laVayCuaToi ? "Trả đủ" : "Thu hồi đủ");
+
             the.Controls.Add(lblTen);
             the.Controls.Add(lblChiTiet);
-            the.Controls.Add(tienDo);
+            the.Controls.Add(tienDo);   // add sau pnlNut → nằm dưới, không che nút
             the.Controls.Add(pnlNut);
             return the;
         }

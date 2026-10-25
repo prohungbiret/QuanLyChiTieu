@@ -126,7 +126,7 @@ namespace QuanLyChiTieu.Controls
         {
             var the = new Panel();
             the.BackColor = Theme.White;
-            the.Height = 152;
+            the.Height = 148;
             the.Width = Math.Max(340, pnlDanhSach.ClientSize.Width - 28);
             the.Margin = new Padding(0, 0, 0, Theme.GapVua);
             the.Padding = new Padding(14, 10, 14, 8);
@@ -149,17 +149,11 @@ namespace QuanLyChiTieu.Controls
             lblThanhTich.AutoSize = true;
             lblThanhTich.Location = new Point(14, 36);
 
-            var tienDo = new UcProgress();
-            tienDo.Location = new Point(14, 58);
-            tienDo.Width = Math.Max(200, the.Width - 220);
-            tienDo.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
-            tienDo.CapNhat(Math.Max(0, ct.DaDat), ct.MucTieu.SoTienMucTieu);
-
-            // Hàng nút ở đáy thẻ, căn phải
+            // Hàng nút ở đáy thẻ, căn phải (add TRƯỚC progress để không bị z-order che)
             var pnlNut = new FlowLayoutPanel();
             pnlNut.FlowDirection = FlowDirection.RightToLeft;
-            pnlNut.Location = new Point(14, 96);
-            pnlNut.Size = new Size(the.Width - 28, 40);
+            pnlNut.Location = new Point(14, 94);
+            pnlNut.Size = new Size(the.Width - 28, 34);
             pnlNut.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
             pnlNut.BackColor = Theme.White;
 
@@ -177,9 +171,18 @@ namespace QuanLyChiTieu.Controls
             pnlNut.Controls.Add(btnRut);
             pnlNut.Controls.Add(btnDongGop);
 
+            // Thanh tiến độ: chỉ bar + tình trạng (ẩn dòng mô tả trùng với lblThanhTich).
+            // Add sau pnlNut → nằm dưới về z-order, không thể che nút bị đổi kích thước.
+            var tienDo = new UcProgress { HienMoTa = false };
+            tienDo.Location = new Point(14, 56);
+            tienDo.Width = Math.Max(200, the.Width - 28);
+            tienDo.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+            // Ngữ nghĩa mục tiêu: "Đã đạt" — đạt 100% hiện "Hoàn thành", luôn xanh
+            tienDo.CapNhatTienDo(Math.Max(0m, ct.DaDat), ct.MucTieu.SoTienMucTieu, "Đã đạt", "Hoàn thành");
+
             the.Controls.Add(lblTen);
             the.Controls.Add(lblThanhTich);
-            the.Controls.Add(tienDo);
+            the.Controls.Add(tienDo);   // add sau → nằm dưới pnlNut (đúng ý)
             the.Controls.Add(pnlNut);
             return the;
         }
