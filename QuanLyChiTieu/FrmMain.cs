@@ -110,12 +110,16 @@ namespace QuanLyChiTieu
 
         private void btnNavTietKiem_Click(object sender, EventArgs e)
         {
-            OpenDangXayDung(btnNavTietKiem, "Tiết kiệm", "TV4");
+            // TV1 (thay TV4) — đã tích hợp phân hệ Tiết kiệm (MucTieuTietKiem + GD DongGop/RutTietKiem)
+            MucDangChon(btnNavTietKiem);
+            ShowControl(new UcTietKiem());
         }
 
         private void btnNavVayNo_Click(object sender, EventArgs e)
         {
-            OpenDangXayDung(btnNavVayNo, "Vay nợ", "TV4");
+            // TV1 (thay TV4) — đã tích hợp phân hệ Vay nợ (4 loại GD + LichSuTraNo)
+            MucDangChon(btnNavVayNo);
+            ShowControl(new UcVayNo());
         }
 
         private void btnNavThongKe_Click(object sender, EventArgs e)
