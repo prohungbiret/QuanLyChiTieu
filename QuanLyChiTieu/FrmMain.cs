@@ -96,12 +96,16 @@ namespace QuanLyChiTieu
 
         private void btnNavDanhMuc_Click(object sender, EventArgs e)
         {
-            OpenDangXayDung(btnNavDanhMuc, "Danh mục", "TV3");
+            // TV3 (Hải) — đã tích hợp phân hệ Danh mục (feature/category-budget-report)
+            MucDangChon(btnNavDanhMuc);
+            ShowControl(new UcDanhMuc());
         }
 
         private void btnNavNganSach_Click(object sender, EventArgs e)
         {
-            OpenDangXayDung(btnNavNganSach, "Ngân sách", "TV3");
+            // TV3 (Hải) — đã tích hợp phân hệ Ngân sách
+            MucDangChon(btnNavNganSach);
+            ShowControl(new UcNganSach());
         }
 
         private void btnNavTietKiem_Click(object sender, EventArgs e)
@@ -116,12 +120,20 @@ namespace QuanLyChiTieu
 
         private void btnNavThongKe_Click(object sender, EventArgs e)
         {
-            OpenDangXayDung(btnNavThongKe, "Thống kê + biểu đồ", "TV3");
+            // TV3 (Hải) — đã tích hợp phân hệ Thống kê + biểu đồ
+            MucDangChon(btnNavThongKe);
+            ShowControl(new UcThongKe());
         }
 
         private void btnNavTaiKhoan_Click(object sender, EventArgs e)
         {
-            OpenDangXayDung(btnNavTaiKhoan, "Tài khoản / Đổi mật khẩu", "TV3 (FrmChangePassword)");
+            // TV3 (Hải) — FrmChangePassword là dialog (không phải UserControl):
+            // mở đổi mật khẩu, giữ nguyên màn hình đang xem bên dưới.
+            MucDangChon(btnNavTaiKhoan);
+            using (var frm = new Forms.FrmChangePassword())
+            {
+                frm.ShowDialog(this);
+            }
         }
 
         private void lnkDangXuat_Click(object sender, LinkLabelLinkClickedEventArgs e)
