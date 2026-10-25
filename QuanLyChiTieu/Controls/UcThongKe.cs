@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
+using QuanLyChiTieu.Forms;
 using QuanLyChiTieu.Models;
 using QuanLyChiTieu.Services;
 using QuanLyChiTieu.UI;
@@ -98,6 +99,17 @@ namespace QuanLyChiTieu.Controls
             btnXem.Margin = new Padding(16, 0, 0, 0);
             btnXem.Click += (s, e) => TaiDuLieu();
 
+            // TV1 (thay TV4) — xuất báo cáo Excel theo kỳ đang chọn (BaoCaoService + FrmXuatBaoCao)
+            var btnXuat = new Button();
+            btnXuat.Text = "Xuất Excel";
+            btnXuat.Size = new Size(120, Theme.CaoNut);
+            btnXuat.FlatStyle = FlatStyle.Flat;
+            btnXuat.FlatAppearance.BorderSize = 0;
+            btnXuat.BackColor = Theme.Background;
+            btnXuat.ForeColor = Theme.Text;
+            btnXuat.Margin = new Padding(8, 0, 0, 0);
+            btnXuat.Click += (s, e) => MoXuatBaoCao();
+
             pnlLoc.Controls.Add(rdoThang);
             pnlLoc.Controls.Add(nudThang);
             pnlLoc.Controls.Add(Nhan("/"));
@@ -107,6 +119,7 @@ namespace QuanLyChiTieu.Controls
             pnlLoc.Controls.Add(Nhan("đến"));
             pnlLoc.Controls.Add(dtpDen);
             pnlLoc.Controls.Add(btnXem);
+            pnlLoc.Controls.Add(btnXuat);
 
             // ---- 4 thẻ tổng quan ----
             var pnlKpi = new TableLayoutPanel();
@@ -322,6 +335,53 @@ namespace QuanLyChiTieu.Controls
             dtpTu.Enabled = !theoThang;
             dtpDen.Enabled = !theoThang;
             if (!dangTai) TaiDuLieu();
+        }
+
+        // TV1 (thay TV4) — mở hộp thoại xuất báo cáo, kế theo kỳ đang chọn làm mặc định.
+        private void MoXuatBaoCao()
+        {
+            DateTime tu, den;
+            int thang, nam;
+            if (!LayKy(out tu, out den, out thang, out nam)) return;
+
+            using (var frm = new FrmXuatBaoCao(tu, den))
+            {
+                if (frm.ShowDialog() != DialogResult.OK) return;
+
+                BaoCaoDuLieu dl;
+                try
+                {
+                    dl = BaoCaoService.LayDuLieu(frm.KetQua);
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Không đọc được dữ liệu báo cáo. Hãy kiểm tra cấu hình LocalDB.",
+                        "Lỗi truy cập dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                string tenMacDinh = $"BaoCao_{frm.KetQua.Tu:yyyyMMdd}_{frm.KetQua.Den:yyyyMMdd}.xlsx";
+                using (var sfd = new SaveFileDialog())
+                {
+                    sfd.Title = "Chọn nơi lưu báo cáo";
+                    sfd.Filter = "Excel Book|*.xlsx";
+                    sfd.FileName = tenMacDinh;
+                    if (sfd.ShowDialog() != DialogResult.OK) return;
+
+                    string loi;
+                    if (BaoCaoService.XuatExcel(dl, frm.KetQua.Tu, frm.KetQua.Den,
+                            sfd.FileName, out loi))
+                    {
+                        MessageBox.Show("Xuất file Excel thành công!",
+                            "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show(loi, "Không xuất được báo cáo",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+            }
         }
 
         // Kỳ đang chọn: chế độ tháng → cả tháng; chế độ khoảng ngày → [dtpTu, dtpDen].
