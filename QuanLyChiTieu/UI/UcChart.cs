@@ -91,7 +91,9 @@ namespace QuanLyChiTieu.UI
                 ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Column,
                 Color = Theme.Primary,
                 IsValueShownAsLabel = true,
-                Label = "#,0",
+                // NHẮN: Label là chuỗi keyword charting (#VAL...) — đặt "#,0" sẽ in nguyên
+                // văn "#0" ở đầu mỗi cột. Nhãn số phải dùng LabelFormat (format .NET chuẩn).
+                LabelFormat = "#,0",
                 LabelForeColor = Theme.Text,
                 ToolTip = "#VALX: #VAL{#,0}",
                 XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.String
