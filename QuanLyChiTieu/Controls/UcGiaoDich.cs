@@ -6,6 +6,8 @@ using System.Drawing;
 using System.Windows.Forms;
 using QuanLyChiTieu.Classes;
 using QuanLyChiTieu.Models;
+using Excel = Microsoft.Office.Interop.Excel;
+using System.Runtime.InteropServices;
 
 namespace QuanLyChiTieu.Controls
 {
@@ -42,7 +44,7 @@ namespace QuanLyChiTieu.Controls
             cboLocLoai.Items.Add("Chi tiêu");
             cboLocLoai.Items.Add("Thu tiền");
             cboLocLoai.Items.Add("Chuyển tiền");
-            cboLocLoai.SelectedIndex = -1;
+            cboLocLoai.SelectedIndex = 0;
 
             FillComboViTien();
             HienThiDanhSach();
@@ -528,6 +530,119 @@ namespace QuanLyChiTieu.Controls
             txtTimKiem.Text = "";
        
             HienThiDanhSach();
+        }
+
+        // Excel
+        private void btnXuatExcel_Click(object sender, EventArgs e)
+        { 
+            if(dgvGiaoDich.Rows.Count == 0)
+            {
+                MessageBox.Show("Hiện không có dữ liệu giao dịch nào để xuất!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Title = "Chọn nơi lưu danh sách giao dịch";
+            sfd.Filter = "Excel Books|*.xlsx|Excel 97 - 2003|*.xls";
+            sfd.FileName = $"GiaoDich_{DateTime.Now:yyyyMMdd_HHmm}.xlsx";
+            if (sfd.ShowDialog() != DialogResult.OK) return;
+
+
+            Excel.Application exApp = new Excel.Application();
+            Excel.Workbook exBook = exApp.Workbooks.Add(Excel.XlWBATemplate.xlWBATWorksheet);
+            Excel.Worksheet exSheet = exBook.Worksheets[1];
+            Excel.Range tenTruong = exSheet.Cells[1, 1];
+
+            //Tiêu đề
+            tenTruong.Range["A2:G2"].Merge();
+            tenTruong.Range["A2"].Value = "BÁO CÁO LỊCH SỬ GIAO DỊCH CHI TIÊU";
+            tenTruong.Range["A2"].Font.Size = 16;
+            tenTruong.Range["A2"].Font.Name = "Times New Roman";
+            tenTruong.Range["A2"].Font.Bold = true;
+            tenTruong.Range["A2"].Font.Color = Color.Red;
+            tenTruong.Range["A2"].HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+            //Thông tin người xuất
+            tenTruong.Range["A3:G3"].Merge();
+            tenTruong.Range["A3"].Value = $"Người xuất: {CurrentUser.TenHienThi} | Ngày xuất: {DateTime.Now:dd/MM/yyyy - HH:mm}";
+            tenTruong.Range["A3"].Font.Size = 13;
+            tenTruong.Range["A3"].Font.Name = "Times New Roman";
+            tenTruong.Range["A3"].Font.Italic = true;
+            tenTruong.Range["A3"].HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+            //Bảng Excel
+            tenTruong.Range["A4:G4"].Font.Size = 12;
+            tenTruong.Range["A4:G4"].Font.Name = "Times New Roman";
+            tenTruong.Range["A4:G4"].Font.Bold = true;
+            tenTruong.Range["A4:G4"].HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+            tenTruong.Range["A4"].Value = "Ngày giao dịch";
+            tenTruong.Range["B4"].Value = "Loại giao dịch";
+            tenTruong.Range["C4"].Value = "Số tiền";
+            tenTruong.Range["D4"].Value = "Tên danh mục";
+            tenTruong.Range["E4"].Value = "Ví nguồn";
+            tenTruong.Range["F4"].Value = "Ví đích";
+            tenTruong.Range["G4"].Value = "Ghi chú";
+
+            int hang = 5;
+            for(int i = 0;i < dgvGiaoDich.Rows.Count;i++)
+            {
+                tenTruong.Range["A" + hang].Value = "'" + Convert.ToDateTime(dgvGiaoDich.Rows[i].Cells["NgayGiaoDich"].Value).ToString("dd/MM/yyyy");
+
+
+                string loai = dgvGiaoDich.Rows[i].Cells["LoaiGiaoDich"].Value?.ToString() ?? "";
+                if (loai == "Chi")
+                {
+                    loai = "Chi tiêu";
+                } else if(loai == "Thu")
+                {
+                    loai = "Thu tiền";
+                } else if(loai == "ChuyenTien")
+                {
+                    loai = "Chuyển tiền";
+                }
+                tenTruong.Range["B" + hang].Value = loai;
+                tenTruong.Range["C" + hang].Value = Convert.ToDecimal(dgvGiaoDich.Rows[i].Cells["SoTien"].Value).ToString("N0");
+                tenTruong.Range["D" + hang].Value = dgvGiaoDich.Rows[i].Cells["TenDanhMuc"].Value?.ToString();
+                tenTruong.Range["E" + hang].Value = dgvGiaoDich.Rows[i].Cells["ViNguon"].Value?.ToString();
+                tenTruong.Range["F" + hang].Value = dgvGiaoDich.Rows[i].Cells["ViDich"].Value?.ToString();
+                tenTruong.Range["G" + hang].Value = dgvGiaoDich.Rows[i].Cells["GhiChu"].Value?.ToString();
+                hang++;
+            }
+
+            
+            tenTruong.Range["A4:G" + (hang - 1)].Borders.LineStyle = 1;
+            tenTruong.Range["C5:C" + (hang - 1)].HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
+
+            tenTruong.Range["B" + (hang + 1)].Value = "Tổng thu:";
+            tenTruong.Range["C" + (hang + 1)].Value = lblTongThu.Text;
+            tenTruong.Range["B" + (hang + 1)].Font.Bold = true;
+            tenTruong.Range["C" + (hang + 1)].Font.Bold = true;
+
+            tenTruong.Range["B" + (hang + 2)].Value = "Tổng chi:";
+            tenTruong.Range["C" + (hang + 2)].Value = lblTongChi.Text;
+            tenTruong.Range["B" + (hang + 2)].Font.Bold = true;
+            tenTruong.Range["C" + (hang + 2)].Font.Bold = true;
+
+            tenTruong.Range["B" + (hang + 3)].Value = "Chênh lệch:";
+            tenTruong.Range["C" + (hang + 3)].Value = lblChenhLech.Text;
+            tenTruong.Range["B" + (hang + 3)].Font.Bold = true;
+            tenTruong.Range["C" + (hang + 3)].Font.Bold = true;
+
+            exSheet.Columns.AutoFit();
+            if (System.IO.File.Exists(sfd.FileName))
+            {
+                System.IO.File.Delete(sfd.FileName);
+            }
+
+            exBook.SaveAs(sfd.FileName);
+            exBook.Close();
+            exApp.Quit();
+
+            MessageBox.Show("Xuất file Excel thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            System.Diagnostics.Process.Start(sfd.FileName);
+
+
         }
 
     

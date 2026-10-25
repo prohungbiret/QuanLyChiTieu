@@ -54,6 +54,7 @@ namespace QuanLyChiTieu.Controls
             this.txtTimKiem = new System.Windows.Forms.TextBox();
             this.btnDatLai = new System.Windows.Forms.Button();
             this.btnLoc = new System.Windows.Forms.Button();
+            this.btnXuatExcel = new System.Windows.Forms.Button();
             this.cboLocVi = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
             this.cboLocLoai = new System.Windows.Forms.ComboBox();
@@ -516,6 +517,22 @@ namespace QuanLyChiTieu.Controls
             this.btnDatLai.UseVisualStyleBackColor = false;
             this.btnDatLai.Click += new System.EventHandler(this.btnDatLai_Click);
             // 
+            // btnXuatExcel
+            // 
+            this.btnXuatExcel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(163)))), ((int)(((byte)(74)))));
+            this.btnXuatExcel.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnXuatExcel.FlatAppearance.BorderSize = 0;
+            this.btnXuatExcel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnXuatExcel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnXuatExcel.ForeColor = System.Drawing.Color.White;
+            this.btnXuatExcel.Location = new System.Drawing.Point(846, 328);
+            this.btnXuatExcel.Name = "btnXuatExcel";
+            this.btnXuatExcel.Size = new System.Drawing.Size(105, 29);
+            this.btnXuatExcel.TabIndex = 7;
+            this.btnXuatExcel.Text = "📊 Xuất Excel";
+            this.btnXuatExcel.UseVisualStyleBackColor = false;
+            this.btnXuatExcel.Click += new System.EventHandler(this.btnXuatExcel_Click);
+            // 
             // cboLocVi
             // 
             this.cboLocVi.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -661,6 +678,7 @@ namespace QuanLyChiTieu.Controls
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
+            this.Controls.Add(this.btnXuatExcel);
             this.Controls.Add(this.lblDanhSach);
             this.Controls.Add(this.dgvGiaoDich);
             this.Controls.Add(this.pnlBoLoc);
@@ -736,6 +754,7 @@ namespace QuanLyChiTieu.Controls
         private System.Windows.Forms.TextBox txtTimKiem;
         private System.Windows.Forms.Button btnLoc;
         private System.Windows.Forms.Button btnDatLai;
+        private System.Windows.Forms.Button btnXuatExcel;
         private System.Windows.Forms.Label lblDanhSach;
         private System.Windows.Forms.DataGridView dgvGiaoDich;
     }
