@@ -92,9 +92,13 @@ namespace QuanLyChiTieu.Controls
                 decimal tongDangNo = 0m, tongChoVayChuaThu = 0m;
                 foreach (KhoanVayNoChiTiet ct in ds)
                 {
-                    if (ct.HoanThanhTot) continue;
-                    if (ct.Khoan.LoaiKhoan == "Vay") tongDangNo += ct.ConLai;
-                    else tongChoVayChuaThu += ct.ConLai;
+                    if (!ct.HoanThanhTot)
+                    {
+                        if (ct.Khoan.LoaiKhoan == "Vay") tongDangNo += ct.ConLai;
+                        else tongChoVayChuaThu += ct.ConLai;
+                    }
+                    // Vẫn hiện cả khoản hoàn thành (✓) — như UcTietKiem, ORDER BY TrangThai
+                    // đưa đang xử lý lên trước, hoàn thành xuống dưới.
                     pnlDanhSach.Controls.Add(TaoThe(ct));
                 }
                 ChinhRongThe();
