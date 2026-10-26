@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using QuanLyChiTieu.Models;
@@ -8,11 +7,7 @@ using QuanLyChiTieu.UI;
 
 namespace QuanLyChiTieu.Forms
 {
-    // TV1 (thay TV4) — form Thêm/Sửa khoản vay (FR phần Vay nợ), kế thừa FrmDialogNhap.
-    // THÊM MỚI: chọn ví → VayNoService.Them ghi kèm GD khởi phát
-    // (khoản "Vay" → GD NhanVay tiền vào ví; khoản "ChoVay" → GD ChoVay tiền ra ví).
-    // SỬA: ví không đổi; VayNoService tự giữ tiền gốc không đổi khi khoản đã có trả/thu hồi.
-    public class FrmThemKhoanVay : FrmDialogNhap
+    public partial class FrmThemKhoanVay : Form
     {
         private class LoaiKhoanItem
         {
@@ -23,84 +18,37 @@ namespace QuanLyChiTieu.Forms
             public override string ToString() { return Nhan; }
         }
 
-        private readonly ComboBox cboLoai = new ComboBox();
-        private readonly TextBox txtNguoiLienQuan = new TextBox();
-        private readonly TextBox txtGoc = new TextBox();
-        private readonly DateTimePicker dtpPhatSinh = new DateTimePicker();
-        private readonly DateTimePicker dtpDenHan = new DateTimePicker();
-        private readonly CheckBox chkDenHan = new CheckBox();
-        private readonly TextBox txtLaiSuat = new TextBox();
-        private readonly TextBox txtGhiChu = new TextBox();
-        private readonly Panel pnlVi = new Panel();
-        private readonly ComboBox cboVi = new ComboBox();
-
-        private readonly Panel pnlDenHan = new Panel();
-        private readonly int khoanID; // 0 = thêm mới
-
+        private readonly int khoanID;
         public KhoanVayNo KetQua { get; private set; }
         public int KetQuaViID { get; private set; }
 
         public FrmThemKhoanVay() : this(null) { }
 
         public FrmThemKhoanVay(KhoanVayNoChiTiet sua)
-            : base(sua == null ? "Thêm khoản vay" : "Sửa khoản vay", 520, 440)
         {
-            khoanID = sua == null ? 0 : sua.Khoan.KhoanVayNoID;
+            InitializeComponent();
 
-            // ---- Loại khoản ----
-            cboLoai.DropDownStyle = ComboBoxStyle.DropDownList;
+            khoanID = sua == null ? 0 : sua.Khoan.KhoanVayNoID;
+            this.Text = sua == null ? "Thêm khoản vay" : "Sửa khoản vay";
+            lblTieuDe.Text = this.Text;
+
             cboLoai.Items.Add(new LoaiKhoanItem(true, "Mình nợ (vay tiền của người khác)"));
             cboLoai.Items.Add(new LoaiKhoanItem(false, "Mình cho vay (cho người khác mượn)"));
             cboLoai.SelectedIndex = 0;
 
-            txtNguoiLienQuan.MaxLength = 150;
-            txtLaiSuat.MaxLength = 9;
-
-            // ---- Ví (khi thêm mới) ----
-            cboVi.DropDownStyle = ComboBoxStyle.DropDownList;
             foreach (ViTien v in TietKiemService.LayDsViDangDung()) cboVi.Items.Add(v);
             cboVi.DisplayMember = "TenVi";
             cboVi.ValueMember = "ViTienID";
             if (cboVi.Items.Count > 0) cboVi.SelectedIndex = 0;
-            pnlVi.Height = 40;
-            cboVi.Dock = DockStyle.Fill;
-            pnlVi.Controls.Add(cboVi);
 
-            // ---- Ngày ----
-            dtpPhatSinh.Format = DateTimePickerFormat.Short;
             dtpPhatSinh.MaxDate = DateTime.Today;
             dtpPhatSinh.Value = DateTime.Today;
 
-            dtpDenHan.Format = DateTimePickerFormat.Short;
             dtpDenHan.MaxDate = DateTime.Today.AddYears(50);
             dtpDenHan.Value = DateTime.Today;
             dtpDenHan.Enabled = false;
 
-            chkDenHan.Text = "Có hạn ngày";
-            chkDenHan.AutoSize = true;
             chkDenHan.ForeColor = Theme.TextSub;
-            chkDenHan.CheckedChanged += (s, e) => dtpDenHan.Enabled = chkDenHan.Checked;
-            pnlDenHan.Height = 40;
-            chkDenHan.Location = new Point(0, 6);
-            dtpDenHan.Location = new Point(0, 0);
-            dtpDenHan.Width = 130;
-            pnlDenHan.Controls.Add(dtpDenHan);
-            pnlDenHan.Controls.Add(chkDenHan);
-
-            ThemTruong("Loại", cboLoai, true);
-            ThemTruong("Tên người liên quan", txtNguoiLienQuan, true);
-            ThemTruong("Tiền gốc (đ)", txtGoc, true);
-            ThemTruong("Ngày phát sinh", dtpPhatSinh, true);
-            ThemTruong("Hạn trả", pnlDenHan);
-            ThemTruong("Lãi (%/năm, không bắt buộc)", txtLaiSuat);
-            ThemTruong("Ghi chú", txtGhiChu);
-
-            if (khoanID == 0)
-            {
-                ThemTruong("Ví khởi phát", pnlVi, true);
-                cboLoai.SelectedIndexChanged += (s, e) => CapNhatNhanVi();
-                CapNhatNhanVi(); // đổi ba câu "Ví khởi phát" theo hướng — giữ ComboBox đơn giản
-            }
 
             if (sua != null)
             {
@@ -117,28 +65,43 @@ namespace QuanLyChiTieu.Forms
                 if (sua.Khoan.LaiSuat.HasValue)
                     txtLaiSuat.Text = sua.Khoan.LaiSuat.Value.ToString("0.####");
                 txtGhiChu.Text = sua.Khoan.GhiChu;
+
+                // Ẩn các trường không cho sửa khi đang sửa khoản vay
+                lblVi.Visible = false;
+                cboVi.Visible = false;
             }
+
+            btnLuu.BackColor = Theme.Primary;
+            btnHuy.BackColor = Theme.Background;
         }
 
-        private void CapNhatNhanVi()
+        private void chkDenHan_CheckedChanged(object sender, EventArgs e)
         {
-            // Label hàng "Ví khởi phát" đổi theo hướng để giúp người dùng (không bắt buộc).
+            dtpDenHan.Enabled = chkDenHan.Checked;
         }
 
-        protected override bool HopLe()
+        private void btnHuy_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+            Close();
+        }
+
+        private void btnLuu_Click(object sender, EventArgs e)
         {
             string loi;
             if (string.IsNullOrWhiteSpace(txtNguoiLienQuan.Text))
             {
-                BaoLoi(txtNguoiLienQuan, "Tên người liên quan không được bỏ trống.");
-                return false;
+                MessageBox.Show("Tên người liên quan không được bỏ trống.", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtNguoiLienQuan.Focus();
+                return;
             }
 
             decimal goc;
             if (!ValidationHelper.SoTien(txtGoc.Text, out goc, out loi))
             {
-                BaoLoi(txtGoc, loi.Replace("Số tiền", "Tiền gốc"));
-                return false;
+                MessageBox.Show(loi.Replace("Số tiền", "Tiền gốc"), "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtGoc.Focus();
+                return;
             }
 
             decimal? lai = null;
@@ -149,16 +112,18 @@ namespace QuanLyChiTieu.Forms
                     System.Globalization.CultureInfo.GetCultureInfo("vi-VN"), out laiTam)
                     || laiTam < 0m || laiTam > 999.9999m)
                 {
-                    BaoLoi(txtLaiSuat, "Lãi suất phải là số từ 0 đến 999.9999 (%/năm).");
-                    return false;
+                    MessageBox.Show("Lãi suất phải là số từ 0 đến 999.9999 (%/năm).", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtLaiSuat.Focus();
+                    return;
                 }
                 lai = laiTam;
             }
 
             if (chkDenHan.Checked && dtpDenHan.Enabled && dtpDenHan.Value.Date < dtpPhatSinh.Value.Date)
             {
-                BaoLoi(dtpDenHan, "Hạn trả không được trước ngày phát sinh.");
-                return false;
+                MessageBox.Show("Hạn trả không được trước ngày phát sinh.", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                dtpDenHan.Focus();
+                return;
             }
 
             int viID = 0;
@@ -167,8 +132,9 @@ namespace QuanLyChiTieu.Forms
                 ViTien vi = cboVi.SelectedItem as ViTien;
                 if (vi == null)
                 {
-                    BaoLoi(cboVi, "Phải chọn ví cho giao dịch khởi phát của khoản.");
-                    return false;
+                    MessageBox.Show("Phải chọn ví cho giao dịch khởi phát của khoản.", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    cboVi.Focus();
+                    return;
                 }
                 viID = vi.ViTienID;
             }
@@ -190,7 +156,9 @@ namespace QuanLyChiTieu.Forms
                 GhiChu = txtGhiChu.Text.Trim()
             };
             KetQuaViID = viID;
-            return true;
+
+            DialogResult = DialogResult.OK;
+            Close();
         }
     }
 }

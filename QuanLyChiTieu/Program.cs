@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,12 +17,23 @@ namespace QuanLyChiTieu
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            // Luồng: FrmLogin (DialogResult) → FrmMain. Đóng FrmLogin = thoát app.
-            using (FrmLogin frm = new FrmLogin())
+            // Luồng: FrmLogin (DialogResult) ⇄ FrmMain. Đóng FrmLogin = thoát app.
+            while (true)
             {
-                if (frm.ShowDialog() == DialogResult.OK)
+                using (FrmLogin frm = new FrmLogin())
                 {
-                    Application.Run(new FrmMain());
+                    if (frm.ShowDialog() != DialogResult.OK)
+                    {
+                        break;
+                    }
+                }
+
+                Application.Run(new FrmMain());
+
+                // Nếu người dùng đóng FrmMain bằng nút X (không phải Đăng xuất), thoát hẳn ứng dụng
+                if (CurrentUser.DaDangNhap)
+                {
+                    break;
                 }
             }
         }

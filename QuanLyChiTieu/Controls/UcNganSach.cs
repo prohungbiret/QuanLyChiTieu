@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
 using QuanLyChiTieu.Forms;
@@ -7,91 +7,54 @@ using QuanLyChiTieu.UI;
 
 namespace QuanLyChiTieu.Controls
 {
-    // TV3 (Hải) sở hữu — màn Ngân sách (FR08): hạn mức theo (danh mục Chi, tháng),
-    // đã chi chỉ tính loại Chi (NganSachService + view 005), cảnh báo 80% / 100% / vượt
-    // bằng UcProgress dùng chung (màu + nhãn chữ, UI Standard 3.2.1).
-    public class UcNganSach : UserControl
+    public partial class UcNganSach : UserControl
     {
-        private readonly NumericUpDown nudThang = new NumericUpDown();
-        private readonly NumericUpDown nudNam = new NumericUpDown();
-        private readonly FlowLayoutPanel pnlDanhSach = new FlowLayoutPanel();
-        private readonly Label lblTongKet = new Label();
-
         public UcNganSach()
         {
-            Tag = "Ngân sách"; // hợp đồng 5.3
+            InitializeComponent();
+            Tag = "Ngân sách";
             BackColor = Theme.Background;
             Font = new Font("Segoe UI", 9.5f);
 
-            // ---- Hàng chọn kỳ + thao tác ----
-            var pnlTools = new FlowLayoutPanel();
-            pnlTools.Dock = DockStyle.Top;
-            pnlTools.Height = 52;
-            pnlTools.Padding = new Padding(0, 8, 0, 8);
-            pnlTools.BackColor = Theme.Background;
-            pnlTools.WrapContents = false;
-
-            nudThang.Minimum = 1;
-            nudThang.Maximum = 12;
             nudThang.Value = DateTime.Now.Month;
-            nudThang.Size = new Size(64, Theme.CaoControl);
-            nudThang.ValueChanged += (s, e) => TaiDanhSach();
-
-            nudNam.Minimum = 1900;
-            nudNam.Maximum = 2100;
             nudNam.Value = DateTime.Now.Year;
-            nudNam.Size = new Size(86, Theme.CaoControl);
-            nudNam.ValueChanged += (s, e) => TaiDanhSach();
 
-            var btnThem = new Button();
-            btnThem.Text = "Thêm ngân sách";
-            btnThem.Size = new Size(150, Theme.CaoNut);
-            btnThem.FlatStyle = FlatStyle.Flat;
-            btnThem.FlatAppearance.BorderSize = 0;
+            // Áp theme
+            pnlTools.BackColor = Theme.Background;
+            lblThang.ForeColor = Theme.TextSub;
+            lblNam.ForeColor = Theme.TextSub;
+            nudThang.Size = new Size(64, Theme.CaoControl);
+            nudNam.Size = new Size(86, Theme.CaoControl);
             btnThem.BackColor = Theme.Primary;
             btnThem.ForeColor = Theme.White;
-            btnThem.Margin = new Padding(16, 0, 0, 0);
-            btnThem.Click += (s, e) => ThemMoi();
-
-            pnlTools.Controls.Add(Nhan("Tháng:"));
-            pnlTools.Controls.Add(nudThang);
-            pnlTools.Controls.Add(Nhan("Năm:"));
-            pnlTools.Controls.Add(nudNam);
-            pnlTools.Controls.Add(btnThem);
-
-            // ---- Tổng kết kỳ ----
-            lblTongKet.Dock = DockStyle.Bottom;
-            lblTongKet.Height = 26;
-            lblTongKet.Font = new Font("Segoe UI", 9f);
+            btnThem.Size = new Size(150, Theme.CaoNut);
             lblTongKet.ForeColor = Theme.TextSub;
-
-            // ---- Danh sách thẻ ngân sách (cuộn dọc) ----
-            pnlDanhSach.Dock = DockStyle.Fill;
-            pnlDanhSach.AutoScroll = true;
-            pnlDanhSach.FlowDirection = FlowDirection.TopDown;
-            pnlDanhSach.WrapContents = false;
             pnlDanhSach.BackColor = Theme.Background;
-            pnlDanhSach.Resize += (s, e) => ChinhRongThe();
 
-            Controls.Add(pnlDanhSach);
-            Controls.Add(lblTongKet);
-            Controls.Add(pnlTools);
+            pnlDanhSach.Resize += (s, e) => ChinhRongThe();
         }
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+            if (DesignMode || System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+                return;
             TaiDanhSach();
         }
 
-        private static Label Nhan(string text)
+        private void nudThang_ValueChanged(object sender, EventArgs e)
         {
-            var lbl = new Label();
-            lbl.Text = text;
-            lbl.AutoSize = true;
-            lbl.Margin = new Padding(8, 10, 2, 0);
-            lbl.ForeColor = Theme.TextSub;
-            return lbl;
+            TaiDanhSach();
+        }
+
+        private void nudNam_ValueChanged(object sender, EventArgs e)
+        {
+            TaiDanhSach();
+        }
+
+        private void btnThem_Click(object sender, EventArgs e)
+        {
+            ThemMoi();
         }
 
         private void ChinhRongThe()
@@ -187,7 +150,6 @@ namespace QuanLyChiTieu.Controls
             return the;
         }
 
-        // Nút ở góc phải trên của thẻ; Anchor Right giữ đúng mép khi thẻ đổi rộng (ChinhRongThe).
         private static Button NutThe(string text, int x)
         {
             var btn = new Button();
@@ -214,7 +176,6 @@ namespace QuanLyChiTieu.Controls
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-                // Nhảy về đúng kỳ vừa thêm để người dùng thấy ngay kết quả
                 nudThang.Value = frm.NganSachKetQua.Thang;
                 nudNam.Value = frm.NganSachKetQua.Nam;
                 TaiDanhSach();
@@ -259,7 +220,6 @@ namespace QuanLyChiTieu.Controls
             TaiDanhSach();
         }
 
-        // Sau khi thêm/sửa: nếu kỳ đó đã chạm ngưỡng thì nhắc ngay (FR08/FR11 bản v2).
         private void CanhBaoNeuVuot(Models.NganSach ns)
         {
             decimal daChi = NganSachService.TinhDaChi(ns.DanhMucID, ns.Thang, ns.Nam);

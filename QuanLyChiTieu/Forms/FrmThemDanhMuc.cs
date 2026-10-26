@@ -1,37 +1,29 @@
+using System;
+using System.Drawing;
 using System.Windows.Forms;
 using QuanLyChiTieu.Models;
 using QuanLyChiTieu.Services;
+using QuanLyChiTieu.UI;
 
 namespace QuanLyChiTieu.Forms
 {
-    // TV3 (Hải) sở hữu — form Thêm/Sửa danh mục (FR02), kế thừa FrmDialogNhap (hợp đồng 5.4):
-    // DialogResult.OK chỉ khi HopLe() đúng; UcDanhMuc đọc DanhMucKetQua rồi gọi DanhMucService.
-    public class FrmThemDanhMuc : FrmDialogNhap
+    public partial class FrmThemDanhMuc : Form
     {
-        private readonly TextBox txtTen = new TextBox();
-        private readonly ComboBox cboLoai = new ComboBox();
-        private readonly TextBox txtMoTa = new TextBox();
-        private readonly int danhMucID; // 0 = thêm mới
-
-        /// <summary>Dữ liệu đã nhập (chỉ đọc sau khi ShowDialog trả DialogResult.OK).</summary>
+        private readonly int danhMucID;
         public DanhMuc DanhMucKetQua { get; private set; }
 
         public FrmThemDanhMuc() : this(null) { }
 
-        public FrmThemDanhMuc(DanhMuc sua) : base(sua == null ? "Thêm danh mục" : "Sửa danh mục", 460, 250)
+        public FrmThemDanhMuc(DanhMuc sua)
         {
+            InitializeComponent();
+
             danhMucID = sua == null ? 0 : sua.DanhMucID;
+            this.Text = sua == null ? "Thêm danh mục" : "Sửa danh mục";
+            lblTieuDe.Text = this.Text;
 
-            cboLoai.DropDownStyle = ComboBoxStyle.DropDownList;
-            cboLoai.Items.Add("Thu");
-            cboLoai.Items.Add("Chi");
             cboLoai.SelectedIndex = 0;
-
             txtMoTa.MaxLength = 255;
-
-            ThemTruong("Tên danh mục", txtTen, true);
-            ThemTruong("Loại danh mục", cboLoai, true);
-            ThemTruong("Mô tả", txtMoTa);
 
             if (sua != null)
             {
@@ -39,20 +31,31 @@ namespace QuanLyChiTieu.Forms
                 cboLoai.SelectedItem = sua.LoaiDanhMuc;
                 txtMoTa.Text = sua.MoTa ?? "";
             }
+
+            btnLuu.BackColor = Theme.Primary;
+            btnHuy.BackColor = Theme.Background;
         }
 
-        protected override bool HopLe()
+        private void btnHuy_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+            Close();
+        }
+
+        private void btnLuu_Click(object sender, EventArgs e)
         {
             string loi;
             if (!ValidationHelper.BatBuoc(txtTen.Text, "Tên danh mục", out loi))
             {
-                BaoLoi(txtTen, loi);
-                return false;
+                MessageBox.Show(loi, "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtTen.Focus();
+                return;
             }
             if (cboLoai.SelectedItem == null)
             {
-                BaoLoi(cboLoai, "Phải chọn loại danh mục Thu hoặc Chi.");
-                return false;
+                MessageBox.Show("Phải chọn loại danh mục Thu hoặc Chi.", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                cboLoai.Focus();
+                return;
             }
 
             DanhMucKetQua = new DanhMuc
@@ -64,7 +67,8 @@ namespace QuanLyChiTieu.Forms
                 MoTa = txtMoTa.Text.Trim(),
                 TrangThai = true
             };
-            return true;
+            DialogResult = DialogResult.OK;
+            Close();
         }
     }
 }

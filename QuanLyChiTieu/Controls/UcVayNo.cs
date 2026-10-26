@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -9,68 +9,38 @@ using QuanLyChiTieu.UI;
 
 namespace QuanLyChiTieu.Controls
 {
-    // TV1 (thay TV4) — màn Vay nợ (mockup debts.html): 2 nhóm khoản
-    // "Mình nợ" (Vay) và "Mình cho vay" (ChoVay) dạng thẻ + UcProgress,
-    // mỗi thẻ có Trả nợ/Thu hồi + Sửa + Xóa. Trả nợ mở FrmTraNo (dialog).
-    public class UcVayNo : UserControl
+    public partial class UcVayNo : UserControl
     {
-        private readonly FlowLayoutPanel pnlDanhSach = new FlowLayoutPanel();
-        private readonly Label lblTongKet = new Label();
-
         public UcVayNo()
         {
-            Tag = "Vay nợ"; // hợp đồng 5.3
+            InitializeComponent();
+            Tag = "Vay nợ";
             BackColor = Theme.Background;
             Font = new Font("Segoe UI", 9.5f);
 
-            var pnlTools = new FlowLayoutPanel();
-            pnlTools.Dock = DockStyle.Top;
-            pnlTools.Height = 52;
-            pnlTools.Padding = new Padding(0, 8, 0, 8);
-            pnlTools.BackColor = Theme.Background;
-            pnlTools.WrapContents = false;
-
-            var lblPhanHe = new Label();
-            lblPhanHe.Text = "Quản lý vay nợ";
-            lblPhanHe.AutoSize = true;
-            lblPhanHe.Font = new Font("Segoe UI", 10.5f, FontStyle.Bold);
+            // Áp theme
             lblPhanHe.ForeColor = Theme.Text;
-            lblPhanHe.Margin = new Padding(0, 10, 12, 0);
-
-            var btnThem = new Button();
-            btnThem.Text = "Thêm khoản";
-            btnThem.Size = new Size(140, Theme.CaoNut);
-            btnThem.FlatStyle = FlatStyle.Flat;
-            btnThem.FlatAppearance.BorderSize = 0;
             btnThem.BackColor = Theme.Primary;
             btnThem.ForeColor = Theme.White;
-            btnThem.Margin = new Padding(16, 0, 0, 0);
-            btnThem.Click += (s, e) => ThemMoi();
-
-            pnlTools.Controls.Add(lblPhanHe);
-            pnlTools.Controls.Add(btnThem);
-
-            lblTongKet.Dock = DockStyle.Bottom;
-            lblTongKet.Height = 26;
-            lblTongKet.Font = new Font("Segoe UI", 9f);
+            btnThem.Size = new Size(140, Theme.CaoNut);
             lblTongKet.ForeColor = Theme.TextSub;
-
-            pnlDanhSach.Dock = DockStyle.Fill;
-            pnlDanhSach.AutoScroll = true;
-            pnlDanhSach.FlowDirection = FlowDirection.TopDown;
-            pnlDanhSach.WrapContents = false;
+            pnlTools.BackColor = Theme.Background;
             pnlDanhSach.BackColor = Theme.Background;
-            pnlDanhSach.Resize += (s, e) => ChinhRongThe();
 
-            Controls.Add(pnlDanhSach);
-            Controls.Add(lblTongKet);
-            Controls.Add(pnlTools);
+            pnlDanhSach.Resize += (s, e) => ChinhRongThe();
         }
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+            if (DesignMode || System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+                return;
             TaiDanhSach();
+        }
+
+        private void btnThem_Click(object sender, EventArgs e)
+        {
+            ThemMoi();
         }
 
         private void ChinhRongThe()
@@ -97,8 +67,6 @@ namespace QuanLyChiTieu.Controls
                         if (ct.Khoan.LoaiKhoan == "Vay") tongDangNo += ct.ConLai;
                         else tongChoVayChuaThu += ct.ConLai;
                     }
-                    // Vẫn hiện cả khoản hoàn thành (✓) — như UcTietKiem, ORDER BY TrangThai
-                    // đưa đang xử lý lên trước, hoàn thành xuống dưới.
                     pnlDanhSach.Controls.Add(TaoThe(ct));
                 }
                 ChinhRongThe();
@@ -156,7 +124,6 @@ namespace QuanLyChiTieu.Controls
             lblChiTiet.AutoSize = true;
             lblChiTiet.Location = new Point(14, 36);
 
-            // Hàng nút ở đáy thẻ, căn phải (add TRƯỚC progress để không bị z-order che)
             var pnlNut = new FlowLayoutPanel();
             pnlNut.FlowDirection = FlowDirection.RightToLeft;
             pnlNut.Location = new Point(14, 94);
@@ -178,8 +145,6 @@ namespace QuanLyChiTieu.Controls
             pnlNut.Controls.Add(btnLichSu);
             pnlNut.Controls.Add(btnGD);
 
-            // Thanh tiến độ: chỉ bar + tình trạng — đúng ngữ nghĩa từng loại khoản:
-            // khoản nợ → "Đã trả", đạt đủ → "Trả đủ"; cho vay → "Đã thu hồi", đủ → "Thu hồi đủ".
             var tienDo = new UcProgress { HienMoTa = false };
             tienDo.Location = new Point(14, 56);
             tienDo.Width = Math.Max(200, the.Width - 28);
@@ -190,7 +155,7 @@ namespace QuanLyChiTieu.Controls
 
             the.Controls.Add(lblTen);
             the.Controls.Add(lblChiTiet);
-            the.Controls.Add(tienDo);   // add sau pnlNut → nằm dưới, không che nút
+            the.Controls.Add(tienDo);
             the.Controls.Add(pnlNut);
             return the;
         }
@@ -239,7 +204,6 @@ namespace QuanLyChiTieu.Controls
 
         private void HienLichSu(KhoanVayNoChiTiet ct)
         {
-            // Lịch sử trả nợ hiển thị dạng hộp thoại danh sách đơn giản (chỉ khoả khoản "Vay" có).
             List<LichSuTraNo> ds = VayNoService.LayLichSuTraNo(ct.Khoan.KhoanVayNoID);
             if (ds.Count == 0)
             {

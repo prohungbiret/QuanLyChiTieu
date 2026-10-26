@@ -19,11 +19,14 @@ namespace QuanLyChiTieu.Controls
         public UcGiaoDich()
         {
             InitializeComponent();
+            this.Tag = "Giao dịch";
         }
 
        
         private void UcGiaoDich_Load(object sender, EventArgs e)
         {
+            if (DesignMode || System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+                return;
             btnSua.Enabled = false;
             btnXoa.Enabled = false;
 
@@ -672,7 +675,15 @@ namespace QuanLyChiTieu.Controls
                 return;
             }
             dtpNgayGiaoDich.Value = Convert.ToDateTime(dgvGiaoDich.CurrentRow.Cells["NgayGiaoDich"].Value?.ToString());
-            txtSoTien.Text = dgvGiaoDich.CurrentRow.Cells["SoTien"].Value?.ToString();
+            decimal soTienHienThi = 0;
+            if (decimal.TryParse(dgvGiaoDich.CurrentRow.Cells["SoTien"].Value?.ToString(), out soTienHienThi))
+            {
+                txtSoTien.Text = soTienHienThi.ToString("#,##0").Replace(",", ".");
+            }
+            else
+            {
+                txtSoTien.Text = "0";
+            }
             cboDanhMuc.Text = dgvGiaoDich.CurrentRow.Cells["TenDanhMuc"].Value?.ToString();
             cboViNguon.Text = dgvGiaoDich.CurrentRow.Cells["ViNguon"].Value?.ToString();
             cboViDich.Text = dgvGiaoDich.CurrentRow.Cells["ViDich"].Value?.ToString();

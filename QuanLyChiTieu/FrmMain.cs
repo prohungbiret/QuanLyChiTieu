@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows.Forms;
 using QuanLyChiTieu.Controls;
@@ -16,6 +16,8 @@ namespace QuanLyChiTieu
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+            if (DesignMode || System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+                return;
             if (!CurrentUser.DaDangNhap)
             {
                 Close(); // mở FrmMain mà chưa có phiên → thoát (lỗi luồng)

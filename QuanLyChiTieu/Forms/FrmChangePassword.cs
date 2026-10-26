@@ -9,106 +9,39 @@ using QuanLyChiTieu.UI;
 
 namespace QuanLyChiTieu.Forms
 {
-    // TV3 (Hải) sở hữu — Đổi mật khẩu (FR01 / FR-03 của bản v2, TC-AUTH-06/08).
-    // Quy tắc (Tài liệu 01 mục 1.5A, 04 mục 4.9, QD08):
-    //  - Bắt buộc xác minh mật khẩu hiện tại trước khi đổi.
-    //  - Mật khẩu mới băm bằng AuthService (PBKDF2 100.000 vòng + salt riêng) —
-    //    form này KHÔNG tự băm, KHÔNG lưu mật khẩu thuần.
-    //  - UPDATE gắn NguoiDungID = CurrentUser — chỉ đổi được mật khẩu của chính mình.
-    // Mở từ FrmMain > Tài khoản (sau khi TV1 nối nút) hoặc từ nơi bất kỳ bằng ShowDialog().
-    public class FrmChangePassword : Form
+    public partial class FrmChangePassword : Form
     {
-        private readonly TextBox txtHienTai = new TextBox();
-        private readonly TextBox txtMoi = new TextBox();
-        private readonly TextBox txtNhapLai = new TextBox();
-        private readonly CheckBox chkHienMatKhau = new CheckBox();
-        private readonly Label lblLoi = new Label();
-
         public FrmChangePassword()
         {
-            FormBorderStyle = FormBorderStyle.FixedDialog;
-            StartPosition = FormStartPosition.CenterParent;
-            MaximizeBox = false;
-            MinimizeBox = false;
-            ShowInTaskbar = false;
+            InitializeComponent();
+
+            // Áp theme runtime
             BackColor = Theme.White;
             ForeColor = Theme.Text;
             Font = new Font("Segoe UI", 10f);
-            Text = "Đổi mật khẩu";
-            ClientSize = new Size(440, 330);
-
-            int y = 20;
-            Controls.Add(TaoNhan("Mật khẩu hiện tại *", ref y));
-            CauHinhO(txtHienTai, ref y);
-            Controls.Add(TaoNhan("Mật khẩu mới *", ref y));
-            CauHinhO(txtMoi, ref y);
-            Controls.Add(TaoNhan("Nhập lại mật khẩu mới *", ref y));
-            CauHinhO(txtNhapLai, ref y);
-
-            chkHienMatKhau.Text = "Hiện mật khẩu";
-            chkHienMatKhau.AutoSize = true;
-            chkHienMatKhau.Location = new Point(24, y);
-            chkHienMatKhau.CheckedChanged += (s, e) => ApDungHienMatKhau();
-            Controls.Add(chkHienMatKhau);
-            y += 30;
-
-            lblLoi.ForeColor = Theme.Chi;
-            lblLoi.Location = new Point(24, y);
-            lblLoi.Size = new Size(392, 36);
-            Controls.Add(lblLoi);
-            y += 40;
-
-            var pnlNut = new FlowLayoutPanel();
-            pnlNut.Dock = DockStyle.Bottom;
-            pnlNut.Height = 56;
-            pnlNut.FlowDirection = FlowDirection.RightToLeft;
-            pnlNut.Padding = new Padding(16, 8, 16, 8);
             pnlNut.BackColor = Theme.White;
-
-            var btnLuu = new Button();
-            btnLuu.Text = "Đổi mật khẩu";
-            btnLuu.Size = new Size(130, Theme.CaoNut);
+            lblLoi.ForeColor = Theme.Chi;
             btnLuu.BackColor = Theme.Primary;
             btnLuu.ForeColor = Theme.White;
-            btnLuu.FlatStyle = FlatStyle.Flat;
-            btnLuu.FlatAppearance.BorderSize = 0;
-            btnLuu.Click += BtnLuu_Click;
-
-            var btnHuy = new Button();
-            btnHuy.Text = "Hủy";
-            btnHuy.Size = new Size(90, Theme.CaoNut);
+            btnLuu.Size = new Size(130, Theme.CaoNut);
             btnHuy.BackColor = Theme.Background;
             btnHuy.ForeColor = Theme.Text;
-            btnHuy.FlatStyle = FlatStyle.Flat;
-            btnHuy.FlatAppearance.BorderSize = 0;
-            btnHuy.Click += (s, e) => { DialogResult = DialogResult.Cancel; Close(); };
-
-            pnlNut.Controls.Add(btnHuy);
-            pnlNut.Controls.Add(btnLuu);
-            Controls.Add(pnlNut);
+            btnHuy.Size = new Size(90, Theme.CaoNut);
 
             AcceptButton = btnLuu;
             CancelButton = btnHuy;
             ApDungHienMatKhau();
         }
 
-        private static Label TaoNhan(string text, ref int y)
+        private void chkHienMatKhau_CheckedChanged(object sender, EventArgs e)
         {
-            var lbl = new Label();
-            lbl.Text = text;
-            lbl.AutoSize = true;
-            lbl.Location = new Point(24, y);
-            y += 22;
-            return lbl;
+            ApDungHienMatKhau();
         }
 
-        private void CauHinhO(TextBox txt, ref int y)
+        private void BtnHuy_Click(object sender, EventArgs e)
         {
-            txt.Location = new Point(24, y);
-            txt.Size = new Size(392, Theme.CaoControl);
-            txt.UseSystemPasswordChar = true;
-            Controls.Add(txt);
-            y += 44;
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
 
         private void ApDungHienMatKhau()
@@ -145,7 +78,6 @@ namespace QuanLyChiTieu.Forms
             }
             catch (Exception)
             {
-                // NFR07: không lộ chi tiết kết nối
                 lblLoi.Text = "Không kết nối được cơ sở dữ liệu. Hãy kiểm tra LocalDB.";
                 return;
             }
@@ -162,10 +94,6 @@ namespace QuanLyChiTieu.Forms
             ctl.Focus();
         }
 
-        /// <summary>
-        /// Kiểm tra mật khẩu hiện tại bằng AuthService.VerifyPassword, sau đó lưu
-        /// hash mới bằng AuthService.HashPassword. Trả false + loi nếu sai mật khẩu hiện tại.
-        /// </summary>
         public static bool DoiMatKhau(string matKhauHienTai, string matKhauMoi, out string loi)
         {
             loi = null;

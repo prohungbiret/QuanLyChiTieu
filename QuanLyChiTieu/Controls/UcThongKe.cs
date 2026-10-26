@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
@@ -10,10 +10,9 @@ using QuanLyChiTieu.UI;
 
 namespace QuanLyChiTieu.Controls
 {
-    // TV3 (Hải) sở hữu — màn Thống kê & báo cáo (FR07): theo tháng hoặc khoảng ngày,
+    //  màn Thống kê & báo cáo (FR07): theo tháng hoặc khoảng ngày,
     // biểu đồ cột (thu/chi 6 tháng) + biểu đồ tròn (cơ cấu theo danh mục) qua UcChart
-    // dùng chung của TV1, bảng phân bổ theo danh mục và bảng chi tiết giao dịch.
-    // Mọi con số chỉ gồm loại Thu + Chi (ThongKeService — QD02, TC-RPT-03/10).
+
     public class UcThongKe : UserControl
     {
         private readonly RadioButton rdoThang = new RadioButton();
@@ -99,7 +98,6 @@ namespace QuanLyChiTieu.Controls
             btnXem.Margin = new Padding(16, 0, 0, 0);
             btnXem.Click += (s, e) => TaiDuLieu();
 
-            // TV1 (thay TV4) — xuất báo cáo Excel theo kỳ đang chọn (BaoCaoService + FrmXuatBaoCao)
             var btnXuat = new Button();
             btnXuat.Text = "Xuất Excel";
             btnXuat.Size = new Size(120, Theme.CaoNut);
@@ -141,8 +139,6 @@ namespace QuanLyChiTieu.Controls
             pnlBieuDo.Dock = DockStyle.Top;
             pnlBieuDo.Height = 340;
 
-            // UcChart dùng chung chỉ vẽ 1 series (6.7) → hai biểu đồ cột xếp dọc:
-            // Thu (xanh) ở trên, Chi (đỏ) ở dưới, cùng trục tháng để đối chiếu.
             var pnlCot = new TableLayoutPanel();
             pnlCot.ColumnCount = 1;
             pnlCot.RowCount = 2;
@@ -205,7 +201,7 @@ namespace QuanLyChiTieu.Controls
             lblGhiChu.Height = 22;
             lblGhiChu.Font = new Font("Segoe UI", 8.5f);
             lblGhiChu.ForeColor = Theme.TextSub;
-            lblGhiChu.Text = "Chỉ tính giao dịch loại Thu và Chi — chuyển tiền, vay nợ, tiết kiệm không vào báo cáo (Bảng 2.2e).";
+            lblGhiChu.Text = "Chỉ tính giao dịch loại Thu và Chi — chuyển tiền.";
 
             Controls.Add(pnlBang);
             Controls.Add(lblGhiChu);
@@ -217,6 +213,8 @@ namespace QuanLyChiTieu.Controls
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+            if (DesignMode || System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+                return;
             TaiDuLieu();
         }
 
@@ -256,9 +254,6 @@ namespace QuanLyChiTieu.Controls
             return the;
         }
 
-        // Hộp trắng: hàng 0 = tiêu đề, hàng 1 = nội dung (TableLayoutPanel —
-        // không phụ thuộc thứ tự Add như Dock, tránh lỗi bố cục của Dashboard từng gặp).
-        // Nơi gọi đặt nội dung vào ô (0, 1).
         private static TableLayoutPanel HopTrang(string tieuDe)
         {
             var hop = new TableLayoutPanel();
@@ -337,7 +332,6 @@ namespace QuanLyChiTieu.Controls
             if (!dangTai) TaiDuLieu();
         }
 
-        // TV1 (thay TV4) — mở hộp thoại xuất báo cáo, kế theo kỳ đang chọn làm mặc định.
         private void MoXuatBaoCao()
         {
             DateTime tu, den;
@@ -384,7 +378,6 @@ namespace QuanLyChiTieu.Controls
             }
         }
 
-        // Kỳ đang chọn: chế độ tháng → cả tháng; chế độ khoảng ngày → [dtpTu, dtpDen].
         private bool LayKy(out DateTime tu, out DateTime den, out int thang, out int nam)
         {
             thang = (int)nudThang.Value;

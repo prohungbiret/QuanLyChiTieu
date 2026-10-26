@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
 using QuanLyChiTieu.Forms;
@@ -10,130 +10,100 @@ namespace QuanLyChiTieu.Controls
 {
     // TV3 (Hải) sở hữu — màn Danh mục (FR02): CRUD + ngừng sử dụng / kích hoạt lại.
     // Layout theo UI Standard 3.4.1: tiêu đề > tìm kiếm/lọc + nút thao tác > bảng > dòng trạng thái.
-    public class UcDanhMuc : UserControl
+    public partial class UcDanhMuc : UserControl
     {
-        private readonly TextBox txtTimKiem = new TextBox();
-        private readonly ComboBox cboLoai = new ComboBox();
-        private readonly ComboBox cboTrangThai = new ComboBox();
-        private readonly DataGridView dgv = new DataGridView();
-        private readonly Label lblTrangThaiBar = new Label();
-        private readonly Button btnTrangThai = new Button();
-
         public UcDanhMuc()
         {
+            InitializeComponent();
+
             Tag = "Danh mục"; // FrmMain đọc Tag vào header (hợp đồng 5.3)
             BackColor = Theme.Background;
             Font = new Font("Segoe UI", 9.5f);
 
-            // ---- Hàng công cụ ----
-            var pnlTools = new FlowLayoutPanel();
-            pnlTools.Dock = DockStyle.Top;
-            pnlTools.Height = 52;
-            pnlTools.Padding = new Padding(0, 8, 0, 8);
-            pnlTools.BackColor = Theme.Background;
-            pnlTools.WrapContents = false;
-
-            txtTimKiem.Size = new Size(220, Theme.CaoControl);
-            txtTimKiem.TextChanged += (s, e) => TaiDanhSach();
-
-            cboLoai.DropDownStyle = ComboBoxStyle.DropDownList;
-            cboLoai.Size = new Size(130, Theme.CaoControl);
-            cboLoai.Items.Add("Tất cả loại");
-            cboLoai.Items.Add("Thu");
-            cboLoai.Items.Add("Chi");
-            cboLoai.SelectedIndex = 0;
-            cboLoai.SelectedIndexChanged += (s, e) => TaiDanhSach();
-
-            cboTrangThai.DropDownStyle = ComboBoxStyle.DropDownList;
-            cboTrangThai.Size = new Size(150, Theme.CaoControl);
-            cboTrangThai.Items.Add("Tất cả trạng thái");
-            cboTrangThai.Items.Add("Đang sử dụng");
-            cboTrangThai.Items.Add("Đã ngừng");
-            cboTrangThai.SelectedIndex = 0;
-            cboTrangThai.SelectedIndexChanged += (s, e) => TaiDanhSach();
-
-            var btnThem = Nut("Thêm danh mục", true);
-            btnThem.Click += (s, e) => ThemMoi();
-            var btnSua = Nut("Sửa", false);
-            btnSua.Click += (s, e) => SuaChon();
-            btnTrangThai.Text = "Ngừng sử dụng";
-            btnTrangThai.Size = new Size(130, Theme.CaoNut);
-            btnTrangThai.FlatStyle = FlatStyle.Flat;
-            btnTrangThai.FlatAppearance.BorderSize = 0;
-            btnTrangThai.BackColor = Theme.White;
-            btnTrangThai.ForeColor = Theme.Text;
-            btnTrangThai.Click += (s, e) => DoiTrangThai();
-
-            pnlTools.Controls.Add(Nhan("Tìm kiếm:"));
-            pnlTools.Controls.Add(txtTimKiem);
-            pnlTools.Controls.Add(Nhan("Loại:"));
-            pnlTools.Controls.Add(cboLoai);
-            pnlTools.Controls.Add(cboTrangThai);
-            pnlTools.Controls.Add(btnThem);
-            pnlTools.Controls.Add(btnSua);
-            pnlTools.Controls.Add(btnTrangThai);
-
-            // ---- Bảng ----
+            // Khôi phục style DataGridView (Designer chỉ set cột, StyleDataGridView set màu/header)
             UIHelper.StyleDataGridView(dgv);
             dgv.ReadOnly = true;
             dgv.AllowUserToAddRows = false;
             dgv.AllowUserToDeleteRows = false;
             dgv.RowHeadersVisible = false;
-            dgv.Dock = DockStyle.Fill;
-            dgv.Columns.Add("colTen", "Tên danh mục");
-            dgv.Columns.Add("colLoai", "Loại");
-            dgv.Columns.Add("colMoTa", "Mô tả");
-            dgv.Columns.Add("colSoGD", "Số giao dịch");
-            dgv.Columns.Add("colTrangThai", "Trạng thái");
-            dgv.Columns["colLoai"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dgv.Columns["colLoai"].Width = 90;
-            dgv.Columns["colSoGD"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dgv.Columns["colSoGD"].Width = 110;
-            dgv.Columns["colSoGD"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            dgv.Columns["colTrangThai"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dgv.Columns["colTrangThai"].Width = 130;
-            dgv.SelectionChanged += (s, e) => CapNhatNutTrangThai();
-            dgv.CellDoubleClick += (s, e) => { if (e.RowIndex >= 0) SuaChon(); };
 
-            lblTrangThaiBar.Dock = DockStyle.Bottom;
-            lblTrangThaiBar.Height = 22;
-            lblTrangThaiBar.Font = new Font("Segoe UI", 8.5f);
+            // Áp theme runtime
+            pnlTools.BackColor = Theme.Background;
+            lblTimKiem.ForeColor = Theme.TextSub;
+            lblLoai.ForeColor = Theme.TextSub;
+            txtTimKiem.Size = new Size(220, Theme.CaoControl);
+            cboLoai.Size = new Size(130, Theme.CaoControl);
+            cboTrangThai.Size = new Size(150, Theme.CaoControl);
+
+            btnThem.BackColor = Theme.Primary;
+            btnThem.ForeColor = Theme.White;
+            btnThem.Size = new Size(140, Theme.CaoNut);
+
+            btnSua.BackColor = Theme.White;
+            btnSua.ForeColor = Theme.Text;
+            btnSua.Size = new Size(80, Theme.CaoNut);
+
+            btnTrangThai.BackColor = Theme.White;
+            btnTrangThai.ForeColor = Theme.Text;
+            btnTrangThai.Size = new Size(130, Theme.CaoNut);
+
             lblTrangThaiBar.ForeColor = Theme.TextSub;
 
-            Controls.Add(dgv);
-            Controls.Add(lblTrangThaiBar);
-            Controls.Add(pnlTools);
+            // Gán SelectedIndex ban đầu (Designer không tự gán SelectedIndex vì Items được add runtime)
+            cboLoai.SelectedIndex = 0;
+            cboTrangThai.SelectedIndex = 0;
         }
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+            if (DesignMode || System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+                return;
             TaiDanhSach();
         }
 
-        private static Label Nhan(string text)
+        // --- Event Handlers ---
+        private void txtTimKiem_TextChanged(object sender, EventArgs e)
         {
-            var lbl = new Label();
-            lbl.Text = text;
-            lbl.AutoSize = true;
-            lbl.Margin = new Padding(8, 10, 2, 0);
-            lbl.ForeColor = Theme.TextSub;
-            return lbl;
+            TaiDanhSach();
         }
 
-        private static Button Nut(string text, bool chinh)
+        private void cboLoai_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var btn = new Button();
-            btn.Text = text;
-            btn.Size = new Size(chinh ? 140 : 80, Theme.CaoNut);
-            btn.FlatStyle = FlatStyle.Flat;
-            btn.FlatAppearance.BorderSize = 0;
-            btn.BackColor = chinh ? Theme.Primary : Theme.White;
-            btn.ForeColor = chinh ? Theme.White : Theme.Text;
-            btn.Margin = new Padding(8, 0, 0, 0);
-            return btn;
+            TaiDanhSach();
         }
 
+        private void cboTrangThai_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            TaiDanhSach();
+        }
+
+        private void btnThem_Click(object sender, EventArgs e)
+        {
+            ThemMoi();
+        }
+
+        private void btnSua_Click(object sender, EventArgs e)
+        {
+            SuaChon();
+        }
+
+        private void btnTrangThai_Click(object sender, EventArgs e)
+        {
+            DoiTrangThai();
+        }
+
+        private void dgv_SelectionChanged(object sender, EventArgs e)
+        {
+            CapNhatNutTrangThai();
+        }
+
+        private void dgv_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0) SuaChon();
+        }
+
+        // --- Logic ---
         private DanhMuc DangChon()
         {
             if (dgv.CurrentRow == null) return null;

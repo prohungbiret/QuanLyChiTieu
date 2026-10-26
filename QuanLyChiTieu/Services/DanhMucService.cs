@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -31,6 +31,7 @@ namespace QuanLyChiTieu.Services
         public static List<DanhMuc> LayDanhSach(string loaiDanhMuc, bool? trangThai, string tuKhoa)
         {
             var ds = new List<DanhMuc>();
+            if (CurrentUser.NguoiDungID <= 0) return ds;
             string sql = @"SELECT DanhMucID, NguoiDungID, TenDanhMuc, LoaiDanhMuc, MoTa, TrangThai
                            FROM DanhMuc
                            WHERE NguoiDungID = @NguoiDungID

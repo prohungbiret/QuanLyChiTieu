@@ -9,126 +9,48 @@ using QuanLyChiTieu.UI;
 
 namespace QuanLyChiTieu.Controls
 {
-    // UserControl mẫu theo khung C.7 + mockup dashboard: 4 thẻ KPI + giao dịch gần đây.
-    // Mức thỏa thuận: KPI + bảng (biểu đồ cột/tròn thuộc TV3 — Thống kê).
-    // Toàn bộ từ DB thật theo CurrentUser (FR06), không dùng số minh họa.
-    public class UcDashboard : UserControl
+    // UI dựng trong UcDashboard.Designer.cs (4 thẻ KPI + bảng giao dịch).
+    // Toàn bộ dữ liệu lấy từ DB thật theo CurrentUser (FR06), không dùng số minh họa.
+    public partial class UcDashboard : UserControl
     {
-        private readonly Label lblGiaTriThu = new Label();
-        private readonly Label lblGiaTriChi = new Label();
-        private readonly Label lblGiaTriLech = new Label();
-        private readonly Label lblGiaTriSoDu = new Label();
-        private readonly Label lblTongSoDuSub = new Label();
-        private readonly DataGridView dgvGanDay = new DataGridView();
-        private readonly Label lblBangFoot = new Label();
-
         public UcDashboard()
         {
+            InitializeComponent();
+
             Tag = "Trang chủ"; // Hợp đồng 5.3: FrmMain đọc Tag vào header title
             BackColor = Theme.Background;
             Font = new Font("Segoe UI", 9.5f);
 
-            // ---- Khu vực 4 thẻ KPI: TableLayoutPanel 4 cột (mockup: .kpis) ----
-            var pnlKpis = new TableLayoutPanel();
-            pnlKpis.ColumnCount = 4;
-            pnlKpis.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25f));
-            pnlKpis.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25f));
-            pnlKpis.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25f));
-            pnlKpis.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25f));
-            pnlKpis.Dock = DockStyle.Top;
-            pnlKpis.Height = 118;
-            pnlKpis.Margin = new Padding(0, 0, 0, Theme.GapLon);
-
-            string ky = "Tháng " + DateTime.Now.Month + "/" + DateTime.Now.Year;
-            pnlKpis.Controls.Add(TaoTheKpi("Tổng thu trong kỳ", ky + " — chỉ loại Thu", lblGiaTriThu), 0, 0);
-            pnlKpis.Controls.Add(TaoTheKpi("Tổng chi trong kỳ", ky + " — chỉ loại Chi", lblGiaTriChi), 1, 0);
-            pnlKpis.Controls.Add(TaoTheKpi("Chênh lệch thu chi", "Tổng thu − tổng chi", lblGiaTriLech), 2, 0);
-            pnlKpis.Controls.Add(TaoTheKpi("Tổng số dư các ví", "Các ví đang hoạt động", lblGiaTriSoDu), 3, 0);
-            lblGiaTriSoDu.ForeColor = Theme.Primary;
-
-            // ---- Tiêu đề bảng ----
-            var lblTieuDeBang = new Label();
-            lblTieuDeBang.Text = "Giao dịch gần đây";
-            lblTieuDeBang.Font = new Font("Segoe UI", 10.5f, FontStyle.Bold);
-            lblTieuDeBang.ForeColor = Theme.Text;
-            lblTieuDeBang.Dock = DockStyle.Top;
-            lblTieuDeBang.Height = 26;
-
-            // ---- Bảng giao dịch gần đây (StyleDataGridView dùng chung) ----
+            // Áp dụng style DataGridView
             UIHelper.StyleDataGridView(dgvGanDay);
+
+            // Chỉnh lại thông số DataGridView sau khi Style
             dgvGanDay.ReadOnly = true;
             dgvGanDay.AllowUserToAddRows = false;
             dgvGanDay.AllowUserToDeleteRows = false;
             dgvGanDay.RowHeadersVisible = false;
-            dgvGanDay.Dock = DockStyle.Fill;
-            dgvGanDay.Columns.Add("colNgay", "Ngày");
-            dgvGanDay.Columns.Add("colLoai", "Loại");
-            dgvGanDay.Columns.Add("colKhoan", "Danh mục / Khoản");
-            dgvGanDay.Columns.Add("colGhiChu", "Ghi chú");
-            dgvGanDay.Columns.Add("colVi", "Ví liên quan");
-            dgvGanDay.Columns.Add("colSoTien", "Số tiền");
-            dgvGanDay.Columns["colNgay"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dgvGanDay.Columns["colNgay"].Width = 96;
-            dgvGanDay.Columns["colLoai"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dgvGanDay.Columns["colLoai"].Width = 110;
-            dgvGanDay.Columns["colSoTien"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dgvGanDay.Columns["colSoTien"].Width = 140;
-            dgvGanDay.Columns["colSoTien"].DefaultCellStyle.Alignment =
-                DataGridViewContentAlignment.MiddleRight;
 
-            // ---- Foot bảng (số bản ghi — UI Standard 3.5) ----
-            lblBangFoot.Text = "";
-            lblBangFoot.Font = new Font("Segoe UI", 8.5f);
+            // Áp theme runtime cho các control
+            lblGiaTriSoDu.ForeColor = Theme.Primary;
+            lblTieuDeBang.ForeColor = Theme.Text;
             lblBangFoot.ForeColor = Theme.TextSub;
-            lblBangFoot.Dock = DockStyle.Bottom;
-            lblBangFoot.Height = 20;
 
-            // Thứ tự add: Fill trước, rồi Bottom, rồi Top
-            // (docking bố trí đảo z-order: phần tử add sau chiếm mép trước)
-            Controls.Add(dgvGanDay);
-            Controls.Add(lblBangFoot);
-            Controls.Add(lblTieuDeBang);
-            Controls.Add(pnlKpis);
-        }
+            pnlKpiThu.BackColor = Theme.White;
+            pnlKpiChi.BackColor = Theme.White;
+            pnlKpiLech.BackColor = Theme.White;
+            pnlKpiSoDu.BackColor = Theme.White;
 
-        // Tạo 1 thẻ KPI: nền trắng, tiêu đề nhỏ xám, giá trị lớn đậm, mô tả xám.
-        private static Panel TaoTheKpi(string tieuDe, string moTa, Label lblGiaTri)
-        {
-            var the = new Panel();
-            the.BackColor = Theme.White;
-            the.Dock = DockStyle.Fill;
-            the.Padding = new Padding(14, 12, 14, 12);
-            the.Margin = new Padding(0, 0, 12, 0);
-
-            lblGiaTri.Text = "—";
-            lblGiaTri.Font = new Font("Segoe UI", 15f, FontStyle.Bold);
-            lblGiaTri.ForeColor = Theme.Text;
-            lblGiaTri.Dock = DockStyle.Top;
-            lblGiaTri.Height = 34;
-
-            var lblTieuDe = new Label();
-            lblTieuDe.Text = tieuDe;
-            lblTieuDe.Font = new Font("Segoe UI", 8.5f);
-            lblTieuDe.ForeColor = Theme.TextSub;
-            lblTieuDe.Dock = DockStyle.Top;
-            lblTieuDe.Height = 20;
-
-            var lblMoTa = new Label();
-            lblMoTa.Text = moTa;
-            lblMoTa.Font = new Font("Segoe UI", 8f);
-            lblMoTa.ForeColor = Theme.TextSub;
-            lblMoTa.Dock = DockStyle.Bottom;
-            lblMoTa.Height = 34;
-
-            the.Controls.Add(lblGiaTri);
-            the.Controls.Add(lblMoTa);
-            the.Controls.Add(lblTieuDe);
-            return the;
+            // Gán text động cho lblMoTa
+            string ky = "Tháng " + DateTime.Now.Month + "/" + DateTime.Now.Year;
+            lblMoTaThu.Text = ky + " — chỉ loại Thu";
+            lblMoTaChi.Text = ky + " — chỉ loại Chi";
         }
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+            if (DesignMode || System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+                return;
             LoadDashboard();
         }
 
@@ -140,7 +62,7 @@ namespace QuanLyChiTieu.Controls
                 {
                     conn.Open();
 
-                    // ---- KPI: thu/chi tháng hiện tại (chỉ Thu/Chi theo QD02) ----
+                    // ---- KPI: thu/chi tháng hiện tại ----
                     using (SqlCommand cmdKpi = new SqlCommand(
                         @"SELECT SUM(CASE WHEN LoaiGiaoDich = @LoaiThu THEN SoTien ELSE 0 END) AS TongThu,
                                  SUM(CASE WHEN LoaiGiaoDich = @LoaiChi THEN SoTien ELSE 0 END) AS TongChi
@@ -162,6 +84,7 @@ namespace QuanLyChiTieu.Controls
                                 decimal tongThu = r.IsDBNull(0) ? 0m : r.GetDecimal(0);
                                 decimal tongChi = r.IsDBNull(1) ? 0m : r.GetDecimal(1);
                                 decimal lech = tongThu - tongChi;
+
                                 lblGiaTriThu.Text = UIHelper.FormatTien(tongThu);
                                 lblGiaTriThu.ForeColor = Theme.Thu;
                                 lblGiaTriChi.Text = UIHelper.FormatTien(tongChi);
@@ -172,7 +95,7 @@ namespace QuanLyChiTieu.Controls
                         }
                     }
 
-                    // ---- Tổng số dư: công thức 2.6, chỉ ví đang hoạt động (QD03) ----
+                    // ---- Tổng số dư ----
                     decimal soDuAll = 0m;
                     using (SqlCommand cmdSoDu = new SqlCommand(
                         @"SELECT V.ViTienID,
@@ -192,13 +115,12 @@ namespace QuanLyChiTieu.Controls
                                 soDuAll += r.GetDecimal(1);
                             }
                             lblGiaTriSoDu.Text = UIHelper.FormatTien(soDuAll);
-                            lblTongSoDuSub.Visible = false; // placeholder (không dùng thêm)
                         }
                         lblGiaTriSoDu.Tag = soVi;
-                        lblTongSoDuSub.Text = soVi + " ví đang hoạt động";
+                        lblMoTaSoDu.Text = soVi + " ví đang hoạt động";
                     }
 
-                    // ---- Giao dịch gần đây: sort NgayGiaoDich DESC rồi NgayTao DESC (QD09) ----
+                    // ---- Giao dịch gần đây ----
                     using (SqlCommand cmdCount = new SqlCommand(
                         @"SELECT COUNT(*) FROM GiaoDich WHERE NguoiDungID = @NguoiDungID;", conn))
                     {
@@ -270,7 +192,6 @@ namespace QuanLyChiTieu.Controls
             }
             catch (Exception)
             {
-                // NFR07: thông báo phù hợp, không lộ connection string (C.7)
                 MessageBox.Show("Không tải được dữ liệu dashboard. Hãy kiểm tra cấu hình LocalDB.",
                     "Lỗi truy cập dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }

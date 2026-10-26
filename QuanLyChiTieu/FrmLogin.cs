@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Drawing; // Cần thêm dòng này để dùng Point
 using System.Windows.Forms;
 
 namespace QuanLyChiTieu
 {
-    // TV1 sở hữu. Đăng nhập → AuthService → CurrentUser → mở FrmMain (Program.cs điều phối).
     public partial class FrmLogin : Form
     {
         public FrmLogin()
@@ -14,11 +14,12 @@ namespace QuanLyChiTieu
         private void FrmLogin_Load(object sender, EventArgs e)
         {
             lblLoi.Text = "";
-        }
 
-        private void logoLabel_Click(object sender, EventArgs e)
-        {
-            // Logo chỉ mang tính hiển thị, không gắn hành vi.
+            // Tự động căn giữa Logo theo chiều ngang của Form
+            // Trục Y giữ cố định (72px) để không đè lên các control bên dưới
+            int x = (this.ClientSize.Width - picLogo.Width) / 2;
+            int y = 72;
+            picLogo.Location = new Point(x, y);
         }
 
         private void btnDangNhap_Click(object sender, EventArgs e)
@@ -56,7 +57,6 @@ namespace QuanLyChiTieu
             }
             catch (Exception)
             {
-                // NFR07: không lộ connection string, hướng dẫn kiểm tra LocalDB
                 lblLoi.Text = "Không kết nối được cơ sở dữ liệu. Hãy kiểm tra LocalDB.";
             }
         }
@@ -71,7 +71,6 @@ namespace QuanLyChiTieu
 
         private void lnkQuenMatKhau_Click(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            // Ngoài phạm vi phiên bản đầu (mockup login.html).
             MessageBox.Show("Chức năng khôi phục mật khẩu nằm ngoài phạm vi. Vui lòng liên hệ quản trị.", "Quên mật khẩu",
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
         }

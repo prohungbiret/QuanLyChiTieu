@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
 using QuanLyChiTieu.Forms;
@@ -11,68 +11,49 @@ namespace QuanLyChiTieu.Controls
     // TV1 (thay TV4) — màn Tiết kiệm: danh sách mục tiêu dạng thẻ + UcProgress dùng chung
     // (đối chiếu mockup savings.html), mỗi thẻ có Đóng góp / Rút / Sửa / Xóa.
     // Tiến độ hiển thị từ MucTieuChiTiet.DaDat (tính động, QD05 — không lưu cột).
-    public class UcTietKiem : UserControl
+    //
+    // UI tĩnh (pnlTools/lblTongKet/pnlDanhSach) dựng trong UcTietKiem.Designer.cs.
+    // Thẻ mục tiêu là dynamic list → giữ factory TaoThe() trong code (đúng bản chất).
+    public partial class UcTietKiem : UserControl
     {
-        private readonly FlowLayoutPanel pnlDanhSach = new FlowLayoutPanel();
-        private readonly Label lblTongKet = new Label();
-
         public UcTietKiem()
         {
+            InitializeComponent();
+
             Tag = "Tiết kiệm"; // hợp đồng 5.3
             BackColor = Theme.Background;
             Font = new Font("Segoe UI", 9.5f);
 
-            // ---- Hàng công cụ ----
-            var pnlTools = new FlowLayoutPanel();
-            pnlTools.Dock = DockStyle.Top;
-            pnlTools.Height = 52;
-            pnlTools.Padding = new Padding(0, 8, 0, 8);
+            // Áp theme runtime — Designer dùng literal, nhưng khi chạy set lại từ Theme
+            // để đảm bảo khớp nếu Theme.cs đổi màu.
             pnlTools.BackColor = Theme.Background;
-            pnlTools.WrapContents = false;
-
-            var lblPhanHe = new Label();
-            lblPhanHe.Text = "Mục tiêu tiết kiệm";
-            lblPhanHe.AutoSize = true;
-            lblPhanHe.Font = new Font("Segoe UI", 10.5f, FontStyle.Bold);
+            pnlDanhSach.BackColor = Theme.Background;
             lblPhanHe.ForeColor = Theme.Text;
-            lblPhanHe.Margin = new Padding(0, 10, 12, 0);
-
-            var btnThem = new Button();
-            btnThem.Text = "Thêm mục tiêu";
-            btnThem.Size = new Size(150, Theme.CaoNut);
-            btnThem.FlatStyle = FlatStyle.Flat;
-            btnThem.FlatAppearance.BorderSize = 0;
+            lblTongKet.ForeColor = Theme.TextSub;
             btnThem.BackColor = Theme.Primary;
             btnThem.ForeColor = Theme.White;
-            btnThem.Margin = new Padding(16, 0, 0, 0);
-            btnThem.Click += (s, e) => ThemMoi();
+            btnThem.Size = new Size(150, Theme.CaoNut);
 
-            pnlTools.Controls.Add(lblPhanHe);
-            pnlTools.Controls.Add(btnThem);
-
-            // ---- Tổng kết ----
-            lblTongKet.Dock = DockStyle.Bottom;
-            lblTongKet.Height = 26;
-            lblTongKet.Font = new Font("Segoe UI", 9f);
-            lblTongKet.ForeColor = Theme.TextSub;
-
-            // ---- Danh sách thẻ mục tiêu (cuộn dọc) ----
-            pnlDanhSach.Dock = DockStyle.Fill;
-            pnlDanhSach.AutoScroll = true;
-            pnlDanhSach.FlowDirection = FlowDirection.TopDown;
-            pnlDanhSach.WrapContents = false;
-            pnlDanhSach.BackColor = Theme.Background;
-            pnlDanhSach.Resize += (s, e) => ChinhRongThe();
-
-            Controls.Add(pnlDanhSach);
-            Controls.Add(lblTongKet);
-            Controls.Add(pnlTools);
+            // Gắn event runtime (không đưa vào Designer vì Resize cần method riêng)
+            pnlDanhSach.Resize += PnlDanhSach_Resize;
         }
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+            if (DesignMode || System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+                return;
             TaiDanhSach();
+        }
+
+        private void btnThem_Click(object sender, EventArgs e)
+        {
+            ThemMoi();
+        }
+
+        private void PnlDanhSach_Resize(object sender, EventArgs e)
+        {
+            ChinhRongThe();
         }
 
         private void ChinhRongThe()

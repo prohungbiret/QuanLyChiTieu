@@ -12,11 +12,13 @@ namespace QuanLyChiTieu.Controls
         public UcViTien()
         {
             InitializeComponent();
-            this.Tag = "Quản lý ví tiền";
+            this.Tag = "Ví tiền";
         }
 
         private void UcViTien_Load(object sender, EventArgs e)
         {
+            if (DesignMode || System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+                return;
             btnSua.Enabled = false;
             btnXoa.Enabled = false;
 
@@ -66,7 +68,15 @@ namespace QuanLyChiTieu.Controls
                 else
                     cboLoaiVi.Text = "Tiền mặt";
 
-                txtSoDuBanDau.Text = dgvViTien.CurrentRow.Cells["SoDuBanDau"].Value?.ToString();
+                decimal soDuBD = 0;
+                if (decimal.TryParse(dgvViTien.CurrentRow.Cells["SoDuBanDau"].Value?.ToString(), out soDuBD))
+                {
+                    txtSoDuBanDau.Text = soDuBD.ToString("#,##0").Replace(",", ".");
+                }
+                else
+                {
+                    txtSoDuBanDau.Text = "0";
+                }
                 decimal soDuHT = 0;
                 if (decimal.TryParse(dgvViTien.CurrentRow.Cells["SoDuHienTai"].Value?.ToString(), out soDuHT))
                 {

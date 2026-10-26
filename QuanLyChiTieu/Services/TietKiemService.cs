@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -299,6 +299,7 @@ namespace QuanLyChiTieu.Services
         public static List<ViTien> LayDsViDangDung()
         {
             var ds = new List<ViTien>();
+            if (CurrentUser.NguoiDungID <= 0) return ds;
             string sql = @"SELECT ViTienID, NguoiDungID, TenVi, LoaiVi, SoDuBanDau, TrangThai
                            FROM ViTien
                            WHERE NguoiDungID = @NguoiDungID AND TrangThai = 1
