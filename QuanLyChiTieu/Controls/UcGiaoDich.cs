@@ -52,15 +52,17 @@ namespace QuanLyChiTieu.Controls
             FillComboViTien();
             HienThiDanhSach();
 
-            txtTimKiem.KeyDown += (s, ev) =>
-            {
-                if (ev.KeyCode == Keys.Enter)
-                {
-                    ev.SuppressKeyPress = true;
-                    btnLoc.PerformClick();
-                }
-            };
+            
         }
+        private void txtTimKiem_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                btnLoc.PerformClick();
+            }
+        }
+
         private void FillComboViTien()
         {
             string sqlVi = "select ViTienID, TenVi from ViTien where TrangThai = 1 and NguoiDungID = @NguoiDungID";

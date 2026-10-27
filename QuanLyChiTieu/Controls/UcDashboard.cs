@@ -9,28 +9,27 @@ using QuanLyChiTieu.UI;
 
 namespace QuanLyChiTieu.Controls
 {
-    // UI dựng trong UcDashboard.Designer.cs (4 thẻ KPI + bảng giao dịch).
-    // Toàn bộ dữ liệu lấy từ DB thật theo CurrentUser (FR06), không dùng số minh họa.
+    
     public partial class UcDashboard : UserControl
     {
         public UcDashboard()
         {
             InitializeComponent();
 
-            Tag = "Trang chủ"; // Hợp đồng 5.3: FrmMain đọc Tag vào header title
+            Tag = "Trang chủ"; 
             BackColor = Theme.Background;
             Font = new Font("Segoe UI", 9.5f);
 
             // Áp dụng style DataGridView
             UIHelper.StyleDataGridView(dgvGanDay);
 
-            // Chỉnh lại thông số DataGridView sau khi Style
+           
             dgvGanDay.ReadOnly = true;
             dgvGanDay.AllowUserToAddRows = false;
             dgvGanDay.AllowUserToDeleteRows = false;
             dgvGanDay.RowHeadersVisible = false;
 
-            // Áp theme runtime cho các control
+         
             lblGiaTriSoDu.ForeColor = Theme.Primary;
             lblTieuDeBang.ForeColor = Theme.Text;
             lblBangFoot.ForeColor = Theme.TextSub;
@@ -126,11 +125,11 @@ namespace QuanLyChiTieu.Controls
                     {
                         cmdCount.Parameters.Add("@NguoiDungID", SqlDbType.Int).Value = CurrentUser.NguoiDungID;
                         int tongSoGD = Convert.ToInt32(cmdCount.ExecuteScalar());
-                        lblBangFoot.Text = "Hiển thị 9 giao dịch gần nhất trong " + tongSoGD + " giao dịch";
+                        lblBangFoot.Text = "Hiển thị " + tongSoGD + " giao dịch";
                     }
 
                     using (SqlCommand cmdGD = new SqlCommand(
-                        @"SELECT TOP 9
+                        @"SELECT 
                               G.NgayGiaoDich, G.LoaiGiaoDich, G.SoTien, G.GhiChu,
                               DM.TenDanhMuc, VN.TenVi AS ViNguon, VD.TenVi AS ViDich,
                               KV.TenNguoiLienQuan, MT.TenMucTieu

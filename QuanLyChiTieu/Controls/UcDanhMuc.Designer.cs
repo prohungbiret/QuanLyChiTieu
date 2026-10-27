@@ -32,7 +32,7 @@
 
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pnlTools = new System.Windows.Forms.FlowLayoutPanel();
             this.lblTimKiem = new System.Windows.Forms.Label();
             this.txtTimKiem = new System.Windows.Forms.TextBox();
@@ -49,15 +49,13 @@
             this.colSoGD = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colTrangThai = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lblTrangThaiBar = new System.Windows.Forms.Label();
-
             this.pnlTools.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).BeginInit();
             this.SuspendLayout();
-
-            // ============================================================
-            // pnlTools — Thanh công cụ (FlowLayoutPanel)
-            // ============================================================
-            this.pnlTools.BackColor = System.Drawing.Color.FromArgb(244, 247, 251); // Theme.Background
+            // 
+            // pnlTools
+            // 
+            this.pnlTools.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(247)))), ((int)(((byte)(251)))));
             this.pnlTools.Controls.Add(this.lblTimKiem);
             this.pnlTools.Controls.Add(this.txtTimKiem);
             this.pnlTools.Controls.Add(this.lblLoai);
@@ -67,82 +65,115 @@
             this.pnlTools.Controls.Add(this.btnSua);
             this.pnlTools.Controls.Add(this.btnTrangThai);
             this.pnlTools.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlTools.Height = 52;
+            this.pnlTools.Location = new System.Drawing.Point(0, 0);
             this.pnlTools.Name = "pnlTools";
             this.pnlTools.Padding = new System.Windows.Forms.Padding(0, 8, 0, 8);
+            this.pnlTools.Size = new System.Drawing.Size(1000, 52);
+            this.pnlTools.TabIndex = 2;
             this.pnlTools.WrapContents = false;
-
+            // 
             // lblTimKiem
+            // 
             this.lblTimKiem.AutoSize = true;
-            this.lblTimKiem.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139); // Theme.TextSub
+            this.lblTimKiem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(116)))), ((int)(((byte)(139)))));
+            this.lblTimKiem.Location = new System.Drawing.Point(8, 18);
             this.lblTimKiem.Margin = new System.Windows.Forms.Padding(8, 10, 2, 0);
             this.lblTimKiem.Name = "lblTimKiem";
+            this.lblTimKiem.Size = new System.Drawing.Size(77, 21);
+            this.lblTimKiem.TabIndex = 0;
             this.lblTimKiem.Text = "Tìm kiếm:";
-
+            // 
             // txtTimKiem
+            // 
+            this.txtTimKiem.Location = new System.Drawing.Point(90, 11);
             this.txtTimKiem.Name = "txtTimKiem";
-            this.txtTimKiem.Size = new System.Drawing.Size(220, 36); // Theme.CaoControl = 36
+            this.txtTimKiem.Size = new System.Drawing.Size(220, 29);
+            this.txtTimKiem.TabIndex = 1;
             this.txtTimKiem.TextChanged += new System.EventHandler(this.txtTimKiem_TextChanged);
-
+            // 
             // lblLoai
+            // 
             this.lblLoai.AutoSize = true;
-            this.lblLoai.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+            this.lblLoai.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(116)))), ((int)(((byte)(139)))));
+            this.lblLoai.Location = new System.Drawing.Point(321, 18);
             this.lblLoai.Margin = new System.Windows.Forms.Padding(8, 10, 2, 0);
             this.lblLoai.Name = "lblLoai";
+            this.lblLoai.Size = new System.Drawing.Size(42, 21);
+            this.lblLoai.TabIndex = 2;
             this.lblLoai.Text = "Loại:";
-
+            // 
             // cboLoai
+            // 
             this.cboLoai.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboLoai.Items.AddRange(new object[] { "Tất cả loại", "Thu", "Chi" });
+            this.cboLoai.Items.AddRange(new object[] {
+            "Tất cả loại",
+            "Thu",
+            "Chi"});
+            this.cboLoai.Location = new System.Drawing.Point(368, 11);
             this.cboLoai.Name = "cboLoai";
-            this.cboLoai.Size = new System.Drawing.Size(130, 36);
+            this.cboLoai.Size = new System.Drawing.Size(130, 29);
+            this.cboLoai.TabIndex = 3;
             this.cboLoai.SelectedIndexChanged += new System.EventHandler(this.cboLoai_SelectedIndexChanged);
-
+            // 
             // cboTrangThai
+            // 
             this.cboTrangThai.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboTrangThai.Items.AddRange(new object[] { "Tất cả trạng thái", "Đang sử dụng", "Đã ngừng" });
+            this.cboTrangThai.Items.AddRange(new object[] {
+            "Tất cả trạng thái",
+            "Đang sử dụng",
+            "Đã ngừng"});
+            this.cboTrangThai.Location = new System.Drawing.Point(504, 11);
             this.cboTrangThai.Name = "cboTrangThai";
-            this.cboTrangThai.Size = new System.Drawing.Size(150, 36);
+            this.cboTrangThai.Size = new System.Drawing.Size(150, 29);
+            this.cboTrangThai.TabIndex = 4;
             this.cboTrangThai.SelectedIndexChanged += new System.EventHandler(this.cboTrangThai_SelectedIndexChanged);
-
+            // 
             // btnThem
-            this.btnThem.BackColor = System.Drawing.Color.FromArgb(37, 99, 235); // Theme.Primary
+            // 
+            this.btnThem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.btnThem.FlatAppearance.BorderSize = 0;
             this.btnThem.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnThem.ForeColor = System.Drawing.Color.White;
+            this.btnThem.Location = new System.Drawing.Point(665, 8);
             this.btnThem.Margin = new System.Windows.Forms.Padding(8, 0, 0, 0);
             this.btnThem.Name = "btnThem";
-            this.btnThem.Size = new System.Drawing.Size(140, 38); // Theme.CaoNut = 38
+            this.btnThem.Size = new System.Drawing.Size(140, 38);
+            this.btnThem.TabIndex = 5;
             this.btnThem.Text = "Thêm danh mục";
             this.btnThem.UseVisualStyleBackColor = false;
             this.btnThem.Click += new System.EventHandler(this.btnThem_Click);
-
+            // 
             // btnSua
+            // 
             this.btnSua.BackColor = System.Drawing.Color.White;
             this.btnSua.FlatAppearance.BorderSize = 0;
             this.btnSua.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSua.ForeColor = System.Drawing.Color.FromArgb(23, 32, 51); // Theme.Text
+            this.btnSua.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(32)))), ((int)(((byte)(51)))));
+            this.btnSua.Location = new System.Drawing.Point(813, 8);
             this.btnSua.Margin = new System.Windows.Forms.Padding(8, 0, 0, 0);
             this.btnSua.Name = "btnSua";
             this.btnSua.Size = new System.Drawing.Size(80, 38);
+            this.btnSua.TabIndex = 6;
             this.btnSua.Text = "Sửa";
             this.btnSua.UseVisualStyleBackColor = false;
             this.btnSua.Click += new System.EventHandler(this.btnSua_Click);
-
+            // 
             // btnTrangThai
+            // 
             this.btnTrangThai.BackColor = System.Drawing.Color.White;
             this.btnTrangThai.FlatAppearance.BorderSize = 0;
             this.btnTrangThai.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnTrangThai.ForeColor = System.Drawing.Color.FromArgb(23, 32, 51);
+            this.btnTrangThai.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(32)))), ((int)(((byte)(51)))));
+            this.btnTrangThai.Location = new System.Drawing.Point(896, 11);
             this.btnTrangThai.Name = "btnTrangThai";
             this.btnTrangThai.Size = new System.Drawing.Size(130, 38);
+            this.btnTrangThai.TabIndex = 7;
             this.btnTrangThai.Text = "Ngừng sử dụng";
             this.btnTrangThai.UseVisualStyleBackColor = false;
             this.btnTrangThai.Click += new System.EventHandler(this.btnTrangThai_Click);
-
-            // ============================================================
-            // dgv — DataGridView
-            // ============================================================
+            // 
+            // dgv
+            // 
             this.dgv.AllowUserToAddRows = false;
             this.dgv.AllowUserToDeleteRows = false;
             this.dgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -153,62 +184,87 @@
             this.colSoGD,
             this.colTrangThai});
             this.dgv.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgv.Location = new System.Drawing.Point(0, 52);
             this.dgv.Name = "dgv";
             this.dgv.ReadOnly = true;
             this.dgv.RowHeadersVisible = false;
-            this.dgv.SelectionChanged += new System.EventHandler(this.dgv_SelectionChanged);
+            this.dgv.RowHeadersWidth = 51;
+            this.dgv.Size = new System.Drawing.Size(1000, 526);
+            this.dgv.TabIndex = 0;
             this.dgv.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellDoubleClick);
-
-            // Cột
+            this.dgv.SelectionChanged += new System.EventHandler(this.dgv_SelectionChanged);
+            // 
+            // colTen
+            // 
             this.colTen.HeaderText = "Tên danh mục";
+            this.colTen.MinimumWidth = 6;
             this.colTen.Name = "colTen";
-
-            this.colLoai.HeaderText = "Loại";
-            this.colLoai.Name = "colLoai";
-            this.colLoai.Width = 90;
+            this.colTen.ReadOnly = true;
+            this.colTen.Width = 125;
+            // 
+            // colLoai
+            // 
             this.colLoai.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-
+            this.colLoai.HeaderText = "Loại";
+            this.colLoai.MinimumWidth = 6;
+            this.colLoai.Name = "colLoai";
+            this.colLoai.ReadOnly = true;
+            this.colLoai.Width = 90;
+            // 
+            // colMoTa
+            // 
             this.colMoTa.HeaderText = "Mô tả";
+            this.colMoTa.MinimumWidth = 6;
             this.colMoTa.Name = "colMoTa";
-
-            this.colSoGD.HeaderText = "Số giao dịch";
-            this.colSoGD.Name = "colSoGD";
-            this.colSoGD.Width = 110;
+            this.colMoTa.ReadOnly = true;
+            this.colMoTa.Width = 125;
+            // 
+            // colSoGD
+            // 
             this.colSoGD.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.colSoGD.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-
-            this.colTrangThai.HeaderText = "Trạng thái";
-            this.colTrangThai.Name = "colTrangThai";
-            this.colTrangThai.Width = 130;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.colSoGD.DefaultCellStyle = dataGridViewCellStyle1;
+            this.colSoGD.HeaderText = "Số giao dịch";
+            this.colSoGD.MinimumWidth = 6;
+            this.colSoGD.Name = "colSoGD";
+            this.colSoGD.ReadOnly = true;
+            this.colSoGD.Width = 110;
+            // 
+            // colTrangThai
+            // 
             this.colTrangThai.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-
-            // ============================================================
+            this.colTrangThai.HeaderText = "Trạng thái";
+            this.colTrangThai.MinimumWidth = 6;
+            this.colTrangThai.Name = "colTrangThai";
+            this.colTrangThai.ReadOnly = true;
+            this.colTrangThai.Width = 130;
+            // 
             // lblTrangThaiBar
-            // ============================================================
+            // 
             this.lblTrangThaiBar.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.lblTrangThaiBar.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-            this.lblTrangThaiBar.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139); // Theme.TextSub
-            this.lblTrangThaiBar.Height = 22;
+            this.lblTrangThaiBar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(116)))), ((int)(((byte)(139)))));
+            this.lblTrangThaiBar.Location = new System.Drawing.Point(0, 578);
             this.lblTrangThaiBar.Name = "lblTrangThaiBar";
-            this.lblTrangThaiBar.Text = "";
-
-            // ============================================================
+            this.lblTrangThaiBar.Size = new System.Drawing.Size(1000, 22);
+            this.lblTrangThaiBar.TabIndex = 1;
+            // 
             // UcDanhMuc
-            // ============================================================
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(244, 247, 251); // Theme.Background
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(247)))), ((int)(((byte)(251)))));
             this.Controls.Add(this.dgv);
             this.Controls.Add(this.lblTrangThaiBar);
             this.Controls.Add(this.pnlTools);
             this.Font = new System.Drawing.Font("Segoe UI", 9.5F);
             this.Name = "UcDanhMuc";
             this.Size = new System.Drawing.Size(1000, 600);
-
             this.pnlTools.ResumeLayout(false);
             this.pnlTools.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();
             this.ResumeLayout(false);
+
         }
     }
 }

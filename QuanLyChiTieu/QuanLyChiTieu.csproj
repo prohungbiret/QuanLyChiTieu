@@ -108,9 +108,12 @@
     <Compile Include="Controls\UcNganSach.Designer.cs">
       <DependentUpon>UcNganSach.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\UcThongKe.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+<Compile Include="Controls\UcThongKe.cs">
+  <SubType>UserControl</SubType>
+</Compile>
+<Compile Include="Controls\UcThongKe.Designer.cs">
+  <DependentUpon>UcThongKe.cs</DependentUpon>
+</Compile>
 
     <Compile Include="Controls\UcTietKiem.cs">
       <SubType>UserControl</SubType>
@@ -262,7 +265,9 @@
     <EmbeddedResource Include="Controls\UcNganSach.resx">
       <DependentUpon>UcNganSach.cs</DependentUpon>
     </EmbeddedResource>
-
+<EmbeddedResource Include="Controls\UcThongKe.resx">
+  <DependentUpon>UcThongKe.cs</DependentUpon>
+</EmbeddedResource>
     
     <EmbeddedResource Include="Forms\FrmDialogNhap.resx">
       <DependentUpon>FrmDialogNhap.cs</DependentUpon>

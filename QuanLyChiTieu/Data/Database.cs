@@ -3,7 +3,7 @@ using System.Data.SqlClient;
 
 namespace QuanLyChiTieu.Data
 {
-    // TV1 sở hữu. Mọi service chỉ được tạo kết nối qua đây (mục 4.6, C.1).
+    // Mọi service chỉ được tạo kết nối qua đây 
     public static class Database
     {
         private const string TenKetNoi = "QuanLyChiTieuConnection";

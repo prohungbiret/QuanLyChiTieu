@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Drawing; // Cần thêm dòng này để dùng Point
+using System.Drawing; 
 using System.Windows.Forms;
 
 namespace QuanLyChiTieu

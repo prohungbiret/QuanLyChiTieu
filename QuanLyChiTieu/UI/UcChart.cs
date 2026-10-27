@@ -44,7 +44,7 @@ namespace QuanLyChiTieu.UI
         private readonly CArea area = new CArea();
         private readonly Label lblRong = new Label();
 
-        public UcChart() { }
+        public UcChart() : this(KieuBieuDo.Cot) { }
 
         public UcChart(KieuBieuDo kieuBieuDo)
         {
@@ -54,7 +54,10 @@ namespace QuanLyChiTieu.UI
             chart.Dock = DockStyle.Fill;
             chart.BackColor = Theme.White;
             chart.AntiAliasing = System.Windows.Forms.DataVisualization.Charting.AntiAliasingStyles.All;
-            chart.ChartAreas.Add(area);
+            if (!chart.ChartAreas.Contains(area))
+            {
+                chart.ChartAreas.Add(area);
+            }
 
             area.BackColor = Theme.White;
             area.AxisX.LabelStyle.Font = new Font("Segoe UI", 8f);
@@ -78,6 +81,7 @@ namespace QuanLyChiTieu.UI
             lblRong.Font = new Font("Segoe UI", 10f);
             lblRong.Visible = false;
 
+            Controls.Clear();
             Controls.Add(lblRong);
             Controls.Add(chart);
         }
@@ -88,6 +92,7 @@ namespace QuanLyChiTieu.UI
             CSeries s = new CSeries
             {
                 Name = tenSerie ?? "Giá trị",
+                ChartArea = area.Name,
                 ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Column,
                 Color = Theme.Primary,
                 IsValueShownAsLabel = true,
@@ -119,9 +124,27 @@ namespace QuanLyChiTieu.UI
         /// <summary>Biểu đồ tròn: tỉ trọng theo GiáTri. Không chỉ định Mau → dùng BangMauTron.</summary>
         public void HienThiTron(IList<DiemBieuDo> diem, string tenSerie)
         {
+            if (diem == null || diem.Count == 0)
+            {
+                HienThiTrang();
+                return;
+            }
+
+            decimal tong = 0m;
+            foreach (DiemBieuDo d in diem)
+            {
+                if (d != null && d.GiaTri > 0m) tong += d.GiaTri;
+            }
+            if (tong <= 0m)
+            {
+                HienThiTrang();
+                return;
+            }
+
             CSeries s = new CSeries
             {
                 Name = tenSerie ?? "Tỉ trọng",
+                ChartArea = area.Name,
                 ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie,
                 ToolTip = "#VALX: #VAL{#,0} (#PERCENT{0.##%})",
                 XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.String
@@ -130,15 +153,13 @@ namespace QuanLyChiTieu.UI
             s.SetCustomProperty("PieLabelStyle", "Outside");
 
             int viTri = 0;
-            if (diem != null)
+            foreach (DiemBieuDo d in diem)
             {
-                foreach (DiemBieuDo d in diem)
-                {
-                    int i = s.Points.AddXY(d.Nhan, d.GiaTri);
-                    s.Points[i].Color = d.Mau ?? BangMauTron[viTri % BangMauTron.Length];
-                    s.Points[i].LegendText = d.Nhan;
-                    viTri++;
-                }
+                if (d == null || d.GiaTri <= 0m) continue;
+                int i = s.Points.AddXY(d.Nhan, d.GiaTri);
+                s.Points[i].Color = d.Mau ?? BangMauTron[viTri % BangMauTron.Length];
+                s.Points[i].LegendText = d.Nhan;
+                viTri++;
             }
 
             CLegend legend = new CLegend
@@ -160,13 +181,19 @@ namespace QuanLyChiTieu.UI
             chart.Series.Clear();
             lblRong.Visible = true;
             chart.Visible = false;
+            lblRong.BringToFront();
         }
 
         private void Hien()
         {
-            lblRong.Visible = chart.Series.Count == 0 ||
-                              chart.Series[0].Points.Count == 0;
-            chart.Visible = !lblRong.Visible;
+            bool coDuLieu = chart.Series.Count > 0 &&
+                            chart.Series[0].Points.Count > 0;
+            lblRong.Visible = !coDuLieu;
+            chart.Visible = coDuLieu;
+            if (coDuLieu)
+                chart.BringToFront();
+            else
+                lblRong.BringToFront();
         }
     }
 }
